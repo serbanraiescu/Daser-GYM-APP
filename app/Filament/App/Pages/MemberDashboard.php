@@ -9,7 +9,7 @@ use BackedEnum;
 
 class MemberDashboard extends Page
 {
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-home';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-home';
     protected static ?string $title = 'Contul Meu';
     protected static ?string $navigationLabel = 'Acasă';
     protected static ?string $slug = ''; // Makes this the default page

@@ -22,7 +22,7 @@ class ManageSettings extends Page implements HasSchemas
     use InteractsWithSchemas;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static ?string $navigationGroup = 'Configurare';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configurare';
     protected static ?string $title = 'Setări Sistem';
     protected static ?string $navigationLabel = 'Setări';
     

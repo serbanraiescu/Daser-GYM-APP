@@ -25,7 +25,7 @@ class WebsiteSettings extends Page implements HasSchemas
     use InteractsWithSchemas;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-globe-alt';
-    protected static ?string $navigationGroup = 'Website (Public)';
+    protected static string|\UnitEnum|null $navigationGroup = 'Website (Public)';
     protected static ?string $title = 'Website Builder';
     protected static ?string $navigationLabel = 'Design Site';
     

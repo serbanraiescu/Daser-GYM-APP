@@ -18,7 +18,7 @@ class PlanFeatureResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-sparkles';
     
-    protected static ?string $navigationGroup = 'Configurare';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configurare';
     
     protected static ?string $label = 'Facilitate Abonament';
     protected static ?string $pluralLabel = 'Facilități Abonament';
