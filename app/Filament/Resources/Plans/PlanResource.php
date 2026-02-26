@@ -10,7 +10,6 @@ use App\Filament\Resources\Plans\Tables\PlansTable;
 use App\Models\Plan;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
@@ -18,7 +17,7 @@ class PlanResource extends Resource
 {
     protected static ?string $model = Plan::class;
 
-    protected static string|\Illuminate\Contracts\Support\Htmlable|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
     
     protected static ?string $label = 'Abonament';
     protected static ?string $pluralLabel = 'Abonamente';

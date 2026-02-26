@@ -10,7 +10,6 @@ use App\Filament\Resources\Payments\Tables\PaymentsTable;
 use App\Models\Payment;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
@@ -26,7 +25,7 @@ class PaymentResource extends Resource
         return parent::getEloquentQuery()->with(['member', 'membership']);
     }
 
-    protected static string|\Illuminate\Contracts\Support\Htmlable|null $navigationIcon = 'heroicon-o-banknotes';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
     public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
     {

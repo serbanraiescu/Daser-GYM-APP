@@ -10,7 +10,7 @@ class MemberForm
     {
         return $form
             ->components([
-                \Filament\Schemas\Components\Section::make('Informații Personale')
+                \Filament\Forms\Components\Section::make('Informații Personale')
                     ->schema([
                         \Filament\Forms\Components\TextInput::make('first_name')
                             ->label('Prenume')
@@ -29,7 +29,7 @@ class MemberForm
                             ->label('Cod de bare (8 Caractere)')
                             ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la activarea contului (dacă are acces).'),
                     ])->columns(2),
-                \Filament\Schemas\Components\Section::make('Statut și Categorie')
+                \Filament\Forms\Components\Section::make('Statut și Categorie')
                     ->schema([
                         \Filament\Forms\Components\Select::make('status')
                             ->label('Statut')
@@ -55,13 +55,13 @@ class MemberForm
                             ->image()
                             ->directory('members'),
                     ])->columns(2),
-                \Filament\Schemas\Components\Section::make('Detalii Suplimentare')
+                \Filament\Forms\Components\Section::make('Detalii Suplimentare')
                     ->schema([
                         \Filament\Forms\Components\Textarea::make('notes')
                             ->label('Note / Observații')
                             ->rows(3),
                     ]),
-                \Filament\Schemas\Components\Section::make('Abonamente (Înscrieri)')
+                \Filament\Forms\Components\Section::make('Abonamente (Înscrieri)')
                     ->description('Adaugă sau gestionează abonamentele acestui membru.')
                     ->schema([
                         \Filament\Forms\Components\Repeater::make('memberships')

@@ -19,7 +19,7 @@ class PlanForm
                     ->placeholder('Ex: Acces nelimitat la sala de forță și cardio...')
                     ->rows(2)
                     ->columnSpanFull(),
-                \Filament\Schemas\Components\Group::make([
+                \Filament\Forms\Components\Group::make([
                     \Filament\Forms\Components\TextInput::make('price')
                         ->label('Preț')
                         ->numeric()
@@ -35,7 +35,7 @@ class PlanForm
                         ->numeric()
                         ->helperText('Dacă este gol, se folosește setarea globală.'),
                 ])->columns(3),
-                \Filament\Schemas\Components\Section::make('Facilități & Reguli')
+                \Filament\Forms\Components\Section::make('Facilități & Reguli')
                     ->description('Selectați ce facilități sunt incluse în acest tip de abonament.')
                     ->schema([
                         \Filament\Forms\Components\CheckboxList::make('features')

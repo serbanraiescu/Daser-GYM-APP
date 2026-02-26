@@ -10,7 +10,7 @@ class PaymentForm
     {
         return $form
             ->components([
-                \Filament\Schemas\Components\Section::make('Detalii Plată')
+                \Filament\Forms\Components\Section::make('Detalii Plată')
                     ->schema([
                         \Filament\Forms\Components\Select::make('member_id')
                             ->label('Membru')
@@ -29,7 +29,7 @@ class PaymentForm
                             ->label('Data și Ora Plății')
                             ->default(now()),
                     ])->columns(2),
-                \Filament\Schemas\Components\Section::make('Procesare')
+                \Filament\Forms\Components\Section::make('Procesare')
                     ->schema([
                         \Filament\Forms\Components\Select::make('status')
                             ->label('Statut')

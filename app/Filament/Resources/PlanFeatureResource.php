@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Models\PlanFeature;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -17,7 +16,7 @@ class PlanFeatureResource extends Resource
 {
     protected static ?string $model = PlanFeature::class;
 
-    protected static string|\Illuminate\Contracts\Support\Htmlable|null $navigationIcon = 'heroicon-o-sparkles';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-sparkles';
     
     protected static ?string $navigationGroup = 'Configurare';
     
@@ -28,7 +27,7 @@ class PlanFeatureResource extends Resource
     {
         return $form
             ->components([
-                \Filament\Schemas\Components\Section::make('Detalii Facilitate')
+                \Filament\Forms\Components\Section::make('Detalii Facilitate')
                     ->description('Definiți o facilitate care poate fi atașată unui abonament.')
                     ->schema([
                         TextInput::make('name')

@@ -10,7 +10,6 @@ use App\Filament\Resources\Members\Tables\MembersTable;
 use App\Models\Member;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
@@ -18,7 +17,7 @@ class MemberResource extends Resource
 {
     protected static ?string $model = Member::class;
 
-    protected static string|\Illuminate\Contracts\Support\Htmlable|null $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
     
     protected static ?string $label = 'Membru';
     protected static ?string $pluralLabel = 'Membri';

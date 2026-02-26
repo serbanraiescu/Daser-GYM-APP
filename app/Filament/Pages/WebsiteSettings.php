@@ -5,14 +5,13 @@ namespace App\Filament\Pages;
 use App\Models\Setting;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
-use Filament\Schemas\Schema;
 use Illuminate\Support\Arr;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
@@ -25,7 +24,7 @@ class WebsiteSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string | \Illuminate\Contracts\Support\Htmlable | null $navigationIcon = 'heroicon-o-globe-alt';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-globe-alt';
     protected static ?string $navigationGroup = 'Website (Public)';
     protected static ?string $title = 'Website Builder';
     protected static ?string $navigationLabel = 'Design Site';

@@ -4,12 +4,11 @@ namespace App\Filament\Pages;
 
 use App\Models\Setting;
 use Filament\Forms\Components\FileUpload;
-use Filament\Schemas\Components\Tabs;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
-use Filament\Schemas\Schema;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -22,7 +21,7 @@ class ManageSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string | \Illuminate\Contracts\Support\Htmlable | null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
     protected static ?string $navigationGroup = 'Configurare';
     protected static ?string $title = 'Setări Sistem';
     protected static ?string $navigationLabel = 'Setări';
