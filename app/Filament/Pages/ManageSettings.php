@@ -3,23 +3,23 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\FileUpload;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\TextInput;
+use Filament\Schemas\Components\Select;
+use Filament\Schemas\Components\ColorPicker;
+use Filament\Schemas\Components\Textarea;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Cache;
 
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 
-class ManageSettings extends Page implements HasForms
+class ManageSettings extends Page implements HasSchemas
 {
-    use InteractsWithForms;
+    use InteractsWithSchemas;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
     protected static ?string $navigationGroup = 'Configurare';
@@ -37,9 +37,9 @@ class ManageSettings extends Page implements HasForms
         );
     }
 
-    public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Tabs::make('Settings')
                     ->tabs([
@@ -98,9 +98,9 @@ class ManageSettings extends Page implements HasForms
                         Tabs\Tab::make('Pagini Legale')
                             ->icon('heroicon-o-document-text')
                             ->schema([
-                                \Filament\Forms\Components\RichEditor::make('legal_terms')
+                                \Filament\Schemas\Components\RichEditor::make('legal_terms')
                                     ->label('Termeni și Condiții'),
-                                \Filament\Forms\Components\RichEditor::make('legal_privacy')
+                                \Filament\Schemas\Components\RichEditor::make('legal_privacy')
                                     ->label('Politica de Confidențialitate'),
                             ]),
                     ])

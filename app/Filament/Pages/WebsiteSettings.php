@@ -3,26 +3,26 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\FileUpload;
+use Filament\Schemas\Components\Repeater;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\TextInput;
+use Filament\Schemas\Components\ColorPicker;
+use Filament\Schemas\Components\Textarea;
+use Filament\Schemas\Components\Toggle;
+use Filament\Schemas\Components\Select;
 use Illuminate\Support\Arr;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Cache;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 
-class WebsiteSettings extends Page implements HasForms
+class WebsiteSettings extends Page implements HasSchemas
 {
-    use InteractsWithForms;
+    use InteractsWithSchemas;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-globe-alt';
     protected static ?string $navigationGroup = 'Website (Public)';
@@ -43,12 +43,12 @@ class WebsiteSettings extends Page implements HasForms
             })
             ->pluck('value', 'key');
 
-        $formatJson = function ($key) use ($settings) {
+        $schemaatJson = function ($key) use ($settings) {
             $val = $settings->get($key);
             return $val ? json_decode($val, true) : [];
         };
 
-        $formatBool = function ($key, $default = true) use ($settings) {
+        $schemaatBool = function ($key, $default = true) use ($settings) {
             return $settings->has($key) ? filter_var($settings->get($key), FILTER_VALIDATE_BOOLEAN) : $default;
         };
 
@@ -60,11 +60,11 @@ class WebsiteSettings extends Page implements HasForms
             'website.theme.primary_color' => $settings->get('website.theme.primary_color', $settings->get('gym_primary_color')),
             'website.theme.secondary_color' => $settings->get('website.theme.secondary_color', '#1e293b'),
             // Header
-            'website.header.nav.items' => $formatJson('website.header.nav.items'),
+            'website.header.nav.items' => $schemaatJson('website.header.nav.items'),
             'website.header.cta.primary.label' => $settings->get('website.header.cta.primary.label', 'Autentificare'),
             'website.header.cta.primary.href' => $settings->get('website.header.cta.primary.href', '/app/login'),
             // Hero
-            'website.hero.enabled' => $formatBool('website.hero.enabled'),
+            'website.hero.enabled' => $schemaatBool('website.hero.enabled'),
             'website.hero.title' => $settings->get('website.hero.title', 'Transformă-ți Corpul Astăzi.'),
             'website.hero.subtitle' => $settings->get('website.hero.subtitle', $settings->get('gym_description')),
             'website.hero.image_url' => $settings->get('website.hero.image_url'),
@@ -73,31 +73,31 @@ class WebsiteSettings extends Page implements HasForms
             'website.hero.secondary_button.label' => $settings->get('website.hero.secondary_button.label', 'Contact'),
             'website.hero.secondary_button.href' => $settings->get('website.hero.secondary_button.href', '#contact'),
             // Features
-            'website.features.enabled' => $formatBool('website.features.enabled'),
+            'website.features.enabled' => $schemaatBool('website.features.enabled'),
             'website.features.title' => $settings->get('website.features.title', 'De ce noi?'),
-            'website.features.items' => $formatJson('website.features.items'),
+            'website.features.items' => $schemaatJson('website.features.items'),
             // Plans
-            'website.plans.enabled' => $formatBool('website.plans.enabled'),
+            'website.plans.enabled' => $schemaatBool('website.plans.enabled'),
             'website.plans.title' => $settings->get('website.plans.title', 'Planuri'),
             'website.plans.subtitle' => $settings->get('website.plans.subtitle', 'Alege ce ți se potrivește.'),
-            'website.plans.show_prices' => $formatBool('website.plans.show_prices'),
+            'website.plans.show_prices' => $schemaatBool('website.plans.show_prices'),
             'website.plans.cta_label' => $settings->get('website.plans.cta_label', 'Alege'),
             // Testimonials
-            'website.testimonials.enabled' => $formatBool('website.testimonials.enabled', false),
+            'website.testimonials.enabled' => $schemaatBool('website.testimonials.enabled', false),
             'website.testimonials.title' => $settings->get('website.testimonials.title', 'Povești de Succes'),
-            'website.testimonials.items' => $formatJson('website.testimonials.items'),
+            'website.testimonials.items' => $schemaatJson('website.testimonials.items'),
             // Contact
-            'website.contact.enabled' => $formatBool('website.contact.enabled'),
+            'website.contact.enabled' => $schemaatBool('website.contact.enabled'),
             'website.contact.title' => $settings->get('website.contact.title', 'Contact'),
             'website.contact.subtitle' => $settings->get('website.contact.subtitle', 'Te așteptăm!'),
             'website.contact.phone' => $settings->get('website.contact.phone', $settings->get('gym_phone')),
             'website.contact.email' => $settings->get('website.contact.email', $settings->get('gym_email')),
             'website.contact.address' => $settings->get('website.contact.address', $settings->get('gym_address')),
-            'website.contact.form_enabled' => $formatBool('website.contact.form_enabled', false),
+            'website.contact.form_enabled' => $schemaatBool('website.contact.form_enabled', false),
             // Footer
             'website.footer.text_left' => $settings->get('website.footer.text_left'),
             'website.footer.text_right' => $settings->get('website.footer.text_right', 'Linkuri Utile'),
-            'website.footer.links' => $formatJson('website.footer.links'),
+            'website.footer.links' => $schemaatJson('website.footer.links'),
             'website.footer.copyright_text' => $settings->get('website.footer.copyright_text'),
             // Socials
             'website.footer.socials.facebook' => $settings->get('website.footer.socials.facebook', $settings->get('social_facebook')),
@@ -110,9 +110,9 @@ class WebsiteSettings extends Page implements HasForms
         $this->form->fill(Arr::undot($fillData));
     }
 
-    public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Tabs::make('Website')
                     ->tabs([

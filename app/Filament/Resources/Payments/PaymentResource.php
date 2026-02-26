@@ -27,9 +27,9 @@ class PaymentResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
-    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
-        return PaymentForm::configure($form);
+        return PaymentForm::configure($schema);
     }
 
     public static function table(Table $table): Table

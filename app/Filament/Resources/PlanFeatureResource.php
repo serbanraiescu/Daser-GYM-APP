@@ -5,9 +5,9 @@ namespace App\Filament\Resources;
 use App\Models\PlanFeature;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\TextInput;
+use Filament\Schemas\Components\Textarea;
+use Filament\Schemas\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Support\Icons\Heroicon;
@@ -23,11 +23,11 @@ class PlanFeatureResource extends Resource
     protected static ?string $label = 'Facilitate Abonament';
     protected static ?string $pluralLabel = 'Facilități Abonament';
 
-    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
-        return $form
+        return $schema
             ->components([
-                \Filament\Forms\Components\Section::make('Detalii Facilitate')
+                \Filament\Schemas\Components\Section::make('Detalii Facilitate')
                     ->description('Definiți o facilitate care poate fi atașată unui abonament.')
                     ->schema([
                         TextInput::make('name')
@@ -35,7 +35,7 @@ class PlanFeatureResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn (string $operation, $state, \Filament\Forms\Set $set) => 
+                            ->afterStateUpdated(fn (string $operation, $state, \Filament\Schemas\Set $set) => 
                                 $operation === 'create' ? $set('slug', \Illuminate\Support\Str::slug($state)) : null
                             ),
                         TextInput::make('slug')

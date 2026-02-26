@@ -22,9 +22,9 @@ class MemberResource extends Resource
     protected static ?string $label = 'Membru';
     protected static ?string $pluralLabel = 'Membri';
 
-    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
-        return MemberForm::configure($form);
+        return MemberForm::configure($schema);
     }
 
     public static function table(Table $table): Table

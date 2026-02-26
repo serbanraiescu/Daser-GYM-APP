@@ -24,9 +24,9 @@ class PlanResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
-        return PlanForm::configure($form);
+        return PlanForm::configure($schema);
     }
 
     public static function table(Table $table): Table
