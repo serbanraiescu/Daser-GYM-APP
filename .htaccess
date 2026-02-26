@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Disable directory listing
+    Options -Indexes
+    
+    # Handle the root request
+    RewriteRule ^$ public/index.php [L]
+    
+    # Handle all other requests by prepending public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

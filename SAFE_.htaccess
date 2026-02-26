@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Handle the root request
+    RewriteRule ^$ index.php [L]
+    
+    # Ignore existing diagnostic scripts and the update gateway
+    RewriteCond %{REQUEST_URI} !^/quick_update\.php
+    RewriteCond %{REQUEST_URI} !^/master_fixer\.php
+    RewriteCond %{REQUEST_URI} !^/clean_house\.php
+    RewriteCond %{REQUEST_URI} !^/repair\.php
+    
+    # Handle all other requests
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [L]
+</IfModule>
