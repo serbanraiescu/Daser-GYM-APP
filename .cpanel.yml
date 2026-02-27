@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=$HOME/public_html
-    - /bin/cp -rf public/. $DEPLOYPATH
+    - /bin/cp -rf public/. $HOME/public_html
+    - /bin/cp public/.htaccess $HOME/public_html/.htaccess
