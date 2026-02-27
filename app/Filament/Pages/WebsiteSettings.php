@@ -3,15 +3,15 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
-use Filament\Schemas\Components\FileUpload;
-use Filament\Schemas\Components\Repeater;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\TextInput;
-use Filament\Schemas\Components\ColorPicker;
-use Filament\Schemas\Components\Textarea;
-use Filament\Schemas\Components\Toggle;
-use Filament\Schemas\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Illuminate\Support\Arr;
 use Filament\Pages\Page;
 use Filament\Actions\Action;

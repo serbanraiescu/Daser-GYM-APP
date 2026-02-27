@@ -3,12 +3,12 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
-use Filament\Schemas\Components\FileUpload;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\TextInput;
-use Filament\Schemas\Components\Select;
-use Filament\Schemas\Components\ColorPicker;
-use Filament\Schemas\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Textarea;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -98,9 +98,9 @@ class ManageSettings extends Page implements HasSchemas
                         Tabs\Tab::make('Pagini Legale')
                             ->icon('heroicon-o-document-text')
                             ->schema([
-                                \Filament\Schemas\Components\RichEditor::make('legal_terms')
+                                \Filament\Forms\Components\RichEditor::make('legal_terms')
                                     ->label('Termeni și Condiții'),
-                                \Filament\Schemas\Components\RichEditor::make('legal_privacy')
+                                \Filament\Forms\Components\RichEditor::make('legal_privacy')
                                     ->label('Politica de Confidențialitate'),
                             ]),
                     ])
