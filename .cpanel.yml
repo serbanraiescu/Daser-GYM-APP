@@ -1,5 +1,6 @@
 ---
 deployment:
   tasks:
-    - /bin/cp -rf public/. $HOME/public_html
+    - /usr/bin/rsync -av --progress public/ $HOME/public_html/
     - /bin/cp public/.htaccess $HOME/public_html/.htaccess
+    - /bin/cp public/index.php $HOME/public_html/index.php
