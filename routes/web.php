@@ -10,3 +10,4 @@ Route::get('/politica-confidentialitate', [LandingPageController::class, 'privac
 Route::get('/termeni-si-conditii', [LandingPageController::class, 'terms'])->name('terms');
 
 Route::get('/website-config', [PublicWebsiteController::class, 'getWebsiteConfig'])->name('public.website');
+Route::get('/public/website', [PublicWebsiteController::class, 'getWebsiteConfig']); // Legacy compatibility
