@@ -13,7 +13,7 @@ export default function Main() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('/public/website')
+        axios.get('/website-config')
             .then(res => {
                 setConfig(res.data);
 
