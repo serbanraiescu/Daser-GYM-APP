@@ -7,6 +7,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
@@ -116,7 +117,7 @@ class WebsiteSettings extends Page implements HasSchemas
             ->schema([
                 Tabs::make('Website')
                     ->tabs([
-                        Tabs\Tab::make('Design & Culori')
+                        Tab::make('Design & Culori')
                             ->icon('heroicon-o-paint-brush')
                             ->schema([
                                 TextInput::make('website.brand.name')
@@ -138,7 +139,7 @@ class WebsiteSettings extends Page implements HasSchemas
                                     ->label('Culoare Secundară'),
                             ]),
 
-                        Tabs\Tab::make('Meniu (Header)')
+                        Tab::make('Meniu (Header)')
                             ->icon('heroicon-o-bars-3')
                             ->schema([
                                 Repeater::make('website.header.nav.items')
@@ -173,7 +174,7 @@ class WebsiteSettings extends Page implements HasSchemas
                                     ])->columns(2),
                             ]),
 
-                        Tabs\Tab::make('Hero Section')
+                        Tab::make('Hero Section')
                             ->icon('heroicon-o-photo')
                             ->schema([
                                 Toggle::make('website.hero.enabled')->label('Afișează secțiunea Hero'),
@@ -206,7 +207,7 @@ class WebsiteSettings extends Page implements HasSchemas
                                     ])->columns(2),
                             ]),
 
-                        Tabs\Tab::make('Facilități / Avantaje')
+                        Tab::make('Facilități / Avantaje')
                             ->icon('heroicon-o-star')
                             ->schema([
                                 Toggle::make('website.features.enabled')->label('Afișează secțiunea Facilități'),
@@ -221,7 +222,7 @@ class WebsiteSettings extends Page implements HasSchemas
                                     ])->columns(2)->collapsible(),
                             ]),
 
-                        Tabs\Tab::make('Abonamente (Pricing)')
+                        Tab::make('Abonamente (Pricing)')
                             ->icon('heroicon-o-currency-dollar')
                             ->schema([
                                 Toggle::make('website.plans.enabled')->label('Afișează secțiunea Abonamente'),
@@ -231,7 +232,7 @@ class WebsiteSettings extends Page implements HasSchemas
                                 TextInput::make('website.plans.cta_label')->label('Text Buton Cumpără (ex: Alege Planul)'),
                             ]),
 
-                        Tabs\Tab::make('Testimoniale')
+                        Tab::make('Testimoniale')
                             ->icon('heroicon-o-chat-bubble-bottom-center-text')
                             ->schema([
                                 Toggle::make('website.testimonials.enabled')->label('Afișează Testimoniale'),
@@ -247,7 +248,7 @@ class WebsiteSettings extends Page implements HasSchemas
                                     ])->columns(2)->collapsible()
                             ]),
 
-                        Tabs\Tab::make('Contact & Footer')
+                        Tab::make('Contact & Footer')
                             ->icon('heroicon-o-map-pin')
                             ->schema([
                                 Toggle::make('website.contact.enabled')->label('Afișează Secțiunea Contact'),

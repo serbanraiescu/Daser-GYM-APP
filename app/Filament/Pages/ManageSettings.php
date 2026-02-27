@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Setting;
 use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ColorPicker;
@@ -43,7 +44,7 @@ class ManageSettings extends Page implements HasSchemas
             ->schema([
                 Tabs::make('Settings')
                     ->tabs([
-                        Tabs\Tab::make('Imagine Brand')
+                        Tab::make('Imagine Brand')
                             ->icon('heroicon-o-paint-brush')
                             ->schema([
                                 TextInput::make('gym_name')
@@ -56,7 +57,7 @@ class ManageSettings extends Page implements HasSchemas
                                 ColorPicker::make('gym_primary_color')
                                     ->label('Culoare Principală'),
                             ]),
-                        Tabs\Tab::make('Reguli Afacere')
+                        Tab::make('Reguli Afacere')
                             ->icon('heroicon-o-briefcase')
                             ->schema([
                                 TextInput::make('currency')
@@ -71,14 +72,14 @@ class ManageSettings extends Page implements HasSchemas
                                         'UTC' => 'UTC',
                                     ]),
                             ]),
-                        Tabs\Tab::make('Șabloane Mesaje')
+                        Tab::make('Șabloane Mesaje')
                             ->icon('heroicon-o-envelope')
                             ->schema([
                                 TextInput::make('email_welcome_subject')
                                     ->label('Subiect Email Bun Venit'),
                                 // Textarea::make('sms_welcome_template') will be moved to SMS tab
                             ]),
-                        Tabs\Tab::make('Configurare SMS')
+                        Tab::make('Configurare SMS')
                             ->icon('heroicon-o-chat-bubble-left-right')
                             ->schema([
                                 TextInput::make('sms_gateway_link')
@@ -95,7 +96,7 @@ class ManageSettings extends Page implements HasSchemas
                                     ->rows(3),
                             ]),
 
-                        Tabs\Tab::make('Pagini Legale')
+                        Tab::make('Pagini Legale')
                             ->icon('heroicon-o-document-text')
                             ->schema([
                                 \Filament\Forms\Components\RichEditor::make('legal_terms')
