@@ -11,3 +11,14 @@ Route::get('/termeni-si-conditii', [LandingPageController::class, 'terms'])->nam
 
 Route::get('/website-config', [PublicWebsiteController::class, 'getWebsiteConfig'])->name('public.website');
 Route::get('/public/website', [PublicWebsiteController::class, 'getWebsiteConfig']); // Legacy compatibility
+
+// Emergency Route for Shared Hosting (Zero-Terminal)
+Route::get('/force-migrate', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        return "<h1>Success!</h1><p>Migrations run and cache cleared.</p><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+    } catch (\Exception $e) {
+        return "<h1>Error</h1><pre>" . $e->getMessage() . "</pre>";
+    }
+});
