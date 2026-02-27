@@ -12,21 +12,22 @@ Aplicația a fost configurată special pentru acest tip de hosting:
 Pentru o securitate optimă, structura trebuie să fie:
 ```text
 /home/utilizator/
-    ├── Daser-GYM-APP/ (Tot conținutul repository-ului)
+    ├── daser_gym_app/ (Tot conținutul repository-ului)
     └── public_html/ (Doar conținutul din folderul public al proiectului)
 ```
 
 ### Configurare `index.php` (în `public_html/`)
-Asigurați-vă că `index.php` din `public_html/` are căile corect setate către aplicație:
+Fișierul `index.php` este deja pre-configurat să caute aplicația în `../daser_gym_app`:
 ```php
-require __DIR__.'/../Daser-GYM-APP/vendor/autoload.php';
-$app = require_once __DIR__.'/../Daser-GYM-APP/bootstrap/app.php';
+$APP_DIR = __DIR__ . '/../daser_gym_app';
+require $APP_DIR.'/vendor/autoload.php';
+$app = require_once $APP_DIR.'/bootstrap/app.php';
 ```
 
 ## Pași de Deployment via Git (cPanel)
-1.  **Cloneaza Repo**: Folosiți „Git Version Control” din cPanel pentru a clona repository-ul în `/home/utilizator/Daser-GYM-APP`.
-2.  **Symlink public**: Creați un link simbolic sau copiați conținutul din `Daser-GYM-APP/public/` în `public_html/`.
-3.  **Fișier .env**: Creați manual fișierul `.env` în `/home/utilizator/Daser-GYM-APP/` și adăugați datele bazei de date.
+1.  **Cloneaza Repo**: Folosiți „Git Version Control” din cPanel pentru a clona repository-ul în `/home/utilizator/daser_gym_app`.
+2.  **Deploy**: Apăsați butonul „Deploy” din interfața cPanel. Fișierul `.cpanel.yml` va copia automat totul din `public/` în `public_html/`.
+3.  **Fișier .env**: Creați manual fișierul `.env` în `/home/utilizator/daser_gym_app/` și adăugați datele bazei de date.
 4.  **Permisiuni**: Asigurați-vă că următoarele directoare au permisiuni de scriere (755 sau 775):
     - `storage/`
     - `bootstrap/cache/`
