@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Filament\Resources\Members\Schemas;
-// sync
 
 use Filament\Schemas\Schema;
 
@@ -13,7 +12,7 @@ class MemberForm
             ->components([
                 \Filament\Schemas\Components\Grid::make([
                     'default' => 1,
-                    'lg' => 2,
+                    'lg' => 12,
                 ])
                 ->schema([
                     // Left Side (1/2)
@@ -75,7 +74,7 @@ class MemberForm
                             ])
                             ->collapsible(),
                     ])
-                    ->columnSpan(1),
+                    ->columnSpan(['lg' => 8]),
                     
                     // Right Side (1/2)
                     \Filament\Schemas\Components\Group::make([
@@ -122,7 +121,7 @@ class MemberForm
                                     ->directory('members'),
                             ])->collapsible(),
                     ])
-                    ->columnSpan(1),
+                    ->columnSpan(['lg' => 4]),
                 ]),
 
                 \Filament\Schemas\Components\Section::make('Lista Abonamente')
