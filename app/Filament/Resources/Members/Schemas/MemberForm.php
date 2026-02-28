@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Members\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 
 class MemberForm
@@ -15,7 +17,7 @@ class MemberForm
                 Section::make('Informații Membru')
                     ->icon('heroicon-o-user')
                     ->schema([
-                        \Filament\Forms\Components\Grid::make(2)
+                        Grid::make(2)
                             ->schema([
                                 \Filament\Forms\Components\TextInput::make('first_name')
                                     ->label('Prenume')
@@ -72,7 +74,7 @@ class MemberForm
                     ->description('Activează imediat.')
                     ->visible(fn ($record) => ! ($record?->exists ?? false))
                     ->schema([
-                        \Filament\Forms\Components\Grid::make(4)
+                        Grid::make(4)
                             ->schema([
                                 \Filament\Forms\Components\Toggle::make('activate_plan')
                                     ->label('Activează Abonament')
