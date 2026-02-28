@@ -15,7 +15,31 @@ class ListMembers extends ListRecords
         return [
             CreateAction::make()
                 ->label('Adaugă membru')
-                ->modalWidth('7xl'),
+                ->modalWidth('7xl')
+                ->after(function (array $data, \App\Models\Member $record) {
+                    if ($data['activate_plan'] ?? false) {
+                        $plan = \App\Models\Plan::find($data['initial_plan_id']);
+                        
+                        $membership = \App\Models\Membership::create([
+                            'member_id' => $record->id,
+                            'plan_id' => $plan->id,
+                            'starts_at' => now(),
+                            'expires_at' => now()->addDays($plan->duration_days),
+                            'status' => 'ACTIVE',
+                        ]);
+
+                        \App\Models\Payment::create([
+                            'member_id' => $record->id,
+                            'membership_id' => $membership->id,
+                            'amount' => $data['initial_amount'],
+                            'status' => 'PAID',
+                            'paid_at' => now(),
+                            'method' => $data['initial_payment_method'],
+                        ]);
+
+                        $record->update(['status' => 'ACTIVE']);
+                    }
+                }),
             \Filament\Actions\Action::make('importJan')
                 ->label('Importă Ianuarie')
                 ->icon('heroicon-o-document-arrow-down')
