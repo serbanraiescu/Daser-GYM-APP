@@ -64,6 +64,14 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->renderHook(
+                'panels::footer',
+                fn (): string => '<div class="text-center py-4 text-xs text-gray-400">
+                    <p>Powered by <a href="https://daserdesign.ro" target="_blank" class="font-semibold hover:text-primary-500">Daser Technologies</a></p>
+                    <p>&copy; ' . date('Y') . ' Daser Enterprise SRL</p>
+                    <p>Licensed Software – All Rights Reserved</p>
+                </div>',
+            )
             ->authMiddleware([
                 Authenticate::class,
             ]);

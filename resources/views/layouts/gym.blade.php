@@ -94,9 +94,11 @@
                     </div>
                 </div>
             </div>
-            <div class="border-t border-slate-900 pt-12 flex flex-col md:row justify-between items-center text-slate-500 text-sm gap-4">
-                <p>&copy; {{ date('Year') }} {{ $gymName }}. Toate drepturile rezervate.</p>
-                <p>Designed with ❤️ by Daser Technologies</p>
+            <div class="border-t border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm gap-4">
+                <div class="text-center md:text-left">
+                    <p>&copy; {{ date('Y') }} Daser Enterprise SRL. Licensed Software – All Rights Reserved</p>
+                </div>
+                <p>Powered by <a href="https://daserdesign.ro" target="_blank" class="font-semibold hover:text-white transition-colors">Daser Technologies</a></p>
             </div>
         </div>
     </footer>
