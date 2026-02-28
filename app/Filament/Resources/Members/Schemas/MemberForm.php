@@ -12,44 +12,60 @@ class MemberForm
             ->components([
                 \Filament\Schemas\Components\Grid::make(12)
                     ->schema([
-                        \Filament\Schemas\Components\Section::make('Informații Membru')
-                            ->schema([
-                                \Filament\Forms\Components\TextInput::make('first_name')
-                                    ->label('Prenume')
-                                    ->required(),
-                                \Filament\Forms\Components\TextInput::make('last_name')
-                                    ->label('Nume')
-                                    ->required(),
-                                \Filament\Forms\Components\TextInput::make('phone')
-                                    ->label('Telefon')
-                                    ->tel()
-                                    ->required(),
-                                \Filament\Forms\Components\TextInput::make('email')
-                                    ->label('Email')
-                                    ->email(),
-                                \Filament\Forms\Components\Select::make('category')
-                                    ->label('Categorie')
-                                    ->options([
-                                        'default' => 'Standard',
-                                        'student' => 'Student',
-                                        'senior' => 'Pensionar',
-                                        'vip' => 'VIP',
-                                    ])
-                                    ->default('default')
-                                    ->required(),
-                                \Filament\Forms\Components\Select::make('status')
-                                    ->label('Statut')
-                                    ->options([
-                                        'ACTIVE' => 'Activ',
-                                        'INACTIVE' => 'Inactiv',
-                                        'EXPIRED' => 'Expirat',
-                                    ])
-                                    ->default('ACTIVE')
-                                    ->required(),
-                            ])
-                            ->columns(2)
-                            ->columnSpan(6),
+                        // Left Column
+                        \Filament\Schemas\Components\Group::make([
+                            \Filament\Schemas\Components\Section::make('Informații Membru')
+                                ->schema([
+                                    \Filament\Forms\Components\TextInput::make('first_name')
+                                        ->label('Prenume')
+                                        ->required(),
+                                    \Filament\Forms\Components\TextInput::make('last_name')
+                                        ->label('Nume')
+                                        ->required(),
+                                    \Filament\Forms\Components\TextInput::make('phone')
+                                        ->label('Telefon')
+                                        ->tel()
+                                        ->required(),
+                                    \Filament\Forms\Components\TextInput::make('email')
+                                        ->label('Email')
+                                        ->email(),
+                                    \Filament\Forms\Components\Select::make('category')
+                                        ->label('Categorie')
+                                        ->options([
+                                            'default' => 'Standard',
+                                            'student' => 'Student',
+                                            'senior' => 'Pensionar',
+                                            'vip' => 'VIP',
+                                        ])
+                                        ->default('default')
+                                        ->required(),
+                                    \Filament\Forms\Components\Select::make('status')
+                                        ->label('Statut')
+                                        ->options([
+                                            'ACTIVE' => 'Activ',
+                                            'INACTIVE' => 'Inactiv',
+                                            'EXPIRED' => 'Expirat',
+                                        ])
+                                        ->default('ACTIVE')
+                                        ->required(),
+                                    \Filament\Forms\Components\Placeholder::make('barcode')
+                                        ->label('Cod de bare')
+                                        ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
+                                ])
+                                ->columns(2),
+
+                            \Filament\Schemas\Components\Section::make('Note')
+                                ->schema([
+                                    \Filament\Forms\Components\Textarea::make('notes')
+                                        ->label(false)
+                                        ->placeholder('Adaugă observații aici...')
+                                        ->rows(3),
+                                ])
+                                ->collapsible(),
+                        ])
+                        ->columnSpan(8),
                         
+                        // Right Column
                         \Filament\Schemas\Components\Group::make([
                             \Filament\Schemas\Components\Section::make('Abonament Inițial & Plată')
                                 ->description('Activează abonamentul acum.')
@@ -90,15 +106,8 @@ class MemberForm
                                         ->image()
                                         ->directory('members'),
                                 ])->collapsible()->collapsed(),
-                        ])->columnSpan(4),
-
-                        \Filament\Schemas\Components\Section::make('Note')
-                            ->schema([
-                                \Filament\Forms\Components\Textarea::make('notes')
-                                    ->label(false)
-                                    ->rows(8),
-                            ])
-                            ->columnSpan(2),
+                        ])
+                        ->columnSpan(4),
                     ]),
 
                 \Filament\Schemas\Components\Section::make('Lista Abonamente')
