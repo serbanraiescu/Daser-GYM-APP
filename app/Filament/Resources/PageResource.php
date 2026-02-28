@@ -66,7 +66,7 @@ class PageResource extends Resource
                                         'attachFiles', 'blockquote', 'bold', 'bulletList', 'codeBlock', 'h2', 'h3', 'italic', 'link', 'orderedList', 'redo', 'strike', 'undo',
                                     ])
                                     ->hintAction(
-                                        \Filament\Forms\Components\Actions\Action::make('extractFaq')
+                                        Action::make('extractFaq')
                                             ->label('Generează FAQ automat')
                                             ->icon('heroicon-m-sparkles')
                                             ->color('success')
