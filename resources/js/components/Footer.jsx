@@ -45,8 +45,10 @@ export default function Footer({ brand, footer }) {
                 </div>
 
                 <div className="border-t border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm gap-4">
-                    <p>&copy; {new Date().getFullYear()} {brand.name}. {footer.copyright_text}</p>
-                    <p>Designed with ❤️ by Daser Technologies</p>
+                    <div className="text-center md:text-left">
+                        <p>&copy; {new Date().getFullYear()} Daser Enterprise SRL. Licensed Software – All Rights Reserved</p>
+                    </div>
+                    <p>Powered by <a href="https://daserdesign.ro" target="_blank" rel="noreferrer" className="font-semibold hover:text-white transition-colors">Daser Technologies</a></p>
                 </div>
             </div>
         </footer>

@@ -64,10 +64,8 @@ class AppPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 'panels::footer',
-                fn (): string => '<div class="text-center py-4 text-xs text-gray-400">
-                    <p>Powered by <a href="https://daserdesign.ro" target="_blank" class="font-semibold hover:text-primary-500">Daser Technologies</a></p>
-                    <p>&copy; ' . date('Y') . ' Daser Enterprise SRL</p>
-                    <p>Licensed Software – All Rights Reserved</p>
+                fn (): string => '<div class="text-center py-4 text-[10px] text-gray-400/70">
+                    <p>Powered by <a href="https://daserdesign.ro" target="_blank" class="hover:text-primary-500">Daser Technologies</a> &bull; &copy; ' . date('Y') . ' Daser Enterprise SRL &bull; Licensed Software &ndash; All Rights Reserved</p>
                 </div>',
             )
             ->authMiddleware([
