@@ -12,10 +12,10 @@ class MemberForm
             ->components([
                 \Filament\Schemas\Components\Grid::make([
                     'default' => 1,
-                    'lg' => 3,
+                    'md' => 12,
                 ])
                 ->schema([
-                    // Left Side (2/3 of space)
+                    // Left Side (9 columns / 12 = 75%)
                     \Filament\Schemas\Components\Group::make([
                         \Filament\Schemas\Components\Section::make('Informații Membru')
                             ->icon('heroicon-o-user')
@@ -76,7 +76,7 @@ class MemberForm
                             ->collapsed(),
                     ])
                     ->columnSpan([
-                        'lg' => 9,
+                        'md' => 9,
                     ]),
                     
                     // Right Side (3 columns / 12 = 25%)
@@ -125,7 +125,7 @@ class MemberForm
                             ])->collapsible()->collapsed(),
                     ])
                     ->columnSpan([
-                        'lg' => 3,
+                        'md' => 3,
                     ]),
                 ]),
 
