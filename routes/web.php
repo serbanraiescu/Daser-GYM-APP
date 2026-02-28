@@ -87,6 +87,12 @@ Route::get('/force-migrate', function() {
 
         // 4. Permissions Fix
         $output .= "<h2>4. Permissions Fix</h2>";
+        
+        // Fix the root app directory and storage folder itself - CRITICAL for traversal
+        @chmod(base_path(), 0755);
+        @chmod(storage_path(), 0755);
+        @chmod(storage_path('app'), 0755);
+
         $storageAppPublic = storage_path('app/public');
         if (file_exists($storageAppPublic)) {
             $iterator = new RecursiveIteratorIterator(
