@@ -23,6 +23,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Str;
 
 class PageResource extends Resource
@@ -104,6 +105,44 @@ class PageResource extends Resource
                                         Repeater::make('faq_data')
                                             ->label('Generator Inteligent de Răspunsuri Q&A')
                                             ->helperText('Folosiți această secțiune pentru a "hrăni" modelele AI cu întrebări frecvente. Se vor genera automat tag-urile JSON-LD FAQPage în fundal.')
+                                            ->headerActions([
+                                                \Filament\Forms\Components\Actions\Action::make('extractFromContent')
+                                                    ->label('Smart Extract (Din Conținut)')
+                                                    ->icon('heroicon-m-sparkles')
+                                                    ->color('success')
+                                                    ->tooltip('Vitezează procesul: extrage automat întrebările și răspunsurile detectate în editorul de mai sus.')
+                                                    ->action(function ($get, $set) {
+                                                        $content = strip_tags($get('content'));
+                                                        if (empty($content)) return;
+
+                                                        // Regex magic: detect sentences ending in ? and capture following text
+                                                        // This works as a "Poor man's AI"
+                                                        preg_match_all('/([A-ZĂÎȘȚÂ][^.!?]*\?)\s*([^.!?]+\.?)/u', $content, $matches, PREG_SET_ORDER);
+                                                        
+                                                        $results = [];
+                                                        foreach ($matches as $match) {
+                                                            $results[] = [
+                                                                'question' => trim($match[1]),
+                                                                'answer' => trim($match[2]),
+                                                            ];
+                                                        }
+
+                                                        if (count($results) > 0) {
+                                                            $set('faq_data', $results);
+                                                            Notification::make()
+                                                                ->title('Analiză Finalizată')
+                                                                ->success()
+                                                                ->body('S-au extras automat ' . count($results) . ' perechi de întrebări și răspunsuri!')
+                                                                ->send();
+                                                        } else {
+                                                            Notification::make()
+                                                                ->title('Nicio întrebare găsită')
+                                                                ->warning()
+                                                                ->body('Asigură-te că ai text în editor și că întrebările se termină cu semnul "?".')
+                                                                ->send();
+                                                        }
+                                                    })
+                                            ])
                                             ->schema([
                                                 TextInput::make('question')
                                                     ->label('Întrebare (pentru AI)')
