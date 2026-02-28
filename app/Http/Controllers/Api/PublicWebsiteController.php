@@ -14,8 +14,8 @@ class PublicWebsiteController extends Controller
      */
     public function getWebsiteConfig(): JsonResponse
     {
-        $config = Cache::remember('public:website', now()->addHours(24), function () {
-            // ... (settings fetching)
+        $config = Cache::remember('public:website_v2', now()->addHours(24), function () {
+            // Fetch all settings starting with 'website.' and 'gym_' as fallback
             $settings = Setting::where('is_public', true)
                 ->where(function ($query) {
                     $query->where('key', 'like', 'website.%')
@@ -138,7 +138,7 @@ class PublicWebsiteController extends Controller
 
         // Merge dynamic pages OUTSIDE the cache to ensure instant updates
         $config['footer']['links'] = array_merge(
-            $config['footer']['static_links'],
+            $config['footer']['static_links'] ?? [],
             \App\Models\Page::where('is_active', true)
                 ->where('show_in_footer', true)
                 ->get()
