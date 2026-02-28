@@ -145,55 +145,28 @@ Route::get('/force-migrate', function() {
     }
 });
 
-Route::get('/test-build', function() {
-    $target = base_path('public/build');
-    $link = public_path('build');
+// Fix for the Circular Symlink
+Route::get('/fix-build', function() {
+    $path = base_path('public/build');
     
-    $out = "<h3>Target ($target)</h3>";
-    $out .= "exists: " . (file_exists($target) ? 'Yes' : 'No') . "<br>";
-    if (file_exists($target)) {
-        $files = scandir($target);
-        foreach ($files as $f) {
-            $out .= "$f<br>";
-        }
+    $out = "<h3>Reparare Build...</h3>";
+
+    // 1. Daca este symlink circular, il stergem.
+    if (is_link($path)) {
+        unlink($path);
+        $out .= "<p style='color:green;'>1. Am sters symlink-ul circular buclucas.</p>";
+    } else {
+        $out .= "<p>1. Nu exista symlink de sters.</p>";
     }
+
+    // 2. Restauram fisierele din Git
+    $cmd = 'cd ' . base_path() . ' && git restore public/build 2>&1';
+    $exec = shell_exec($cmd);
     
-    $out .= "<h3>Link ($link)</h3>";
-    $out .= "exists: " . (file_exists($link) ? 'Yes' : 'No') . "<br>";
-    $out .= "is_link: " . (is_link($link) ? 'Yes' : 'No') . "<br>";
-    
+    $out .= "<p style='color:green;'>2. Am extras folderul original de pe Git (public/build) inapoi in aplicatie.</p>";
+    $out .= "<pre>$exec</pre>";
+    $out .= "<p>Da un refresh pe prima pagina!</p>";
+
     return $out;
 });
 
-// Emergency Route for Build Symlink
-Route::get('/fix-build', function() {
-    $target = base_path('public/build'); 
-    $link = public_path('build'); 
-
-    if (!file_exists($target)) {
-        return "<h1 style='color:red;'>Eroare: Nu gasesc folderul sursa (public/build) in repo.</h1>";
-    }
-
-    if (file_exists($link)) {
-        if (is_link($link)) {
-            return "<h1 style='color:green;'>Symlink-ul exista deja. Nu este nevoie de actiuni.</h1>";
-        } else {
-            // Remove physical folder
-            $it = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($link, RecursiveDirectoryIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::CHILD_FIRST
-            );
-            foreach($it as $file) {
-                if ($file->isDir()){ rmdir($file->getRealPath()); } else { unlink($file->getRealPath()); }
-            }
-            rmdir($link);
-        }
-    }
-    
-    // Create Symlink
-    if (@symlink($target, $link)) {
-        return "<h1 style='color:green;'>Succes! Folderul build a fost legat corect prin symlink. </h1><p>Acum poti inchide aceasta pagina.</p>";
-    } else {
-        return "<h1 style='color:red;'>Eroare: Nu s-a putut crea symlink-ul. (Posibil lipsa drepturi scriere).</h1>";
-    }
-});
