@@ -12,122 +12,131 @@ class MemberForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(12)
             ->components([
-                Section::make('Informații Membru')
-                    ->icon('heroicon-o-user')
+                Grid::make(12)
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                \Filament\Forms\Components\TextInput::make('first_name')
-                                    ->label('Prenume')
-                                    ->required()
-                                    ->prefixIcon('heroicon-m-user-circle'),
+                        // LEFT (8/12) - More room for info
+                        Group::make([
+                            Section::make('Informații Membru')
+                                ->icon('heroicon-o-user')
+                                ->schema([
+                                    Grid::make(2)
+                                        ->schema([
+                                            \Filament\Forms\Components\TextInput::make('first_name')
+                                                ->label('Prenume')
+                                                ->required()
+                                                ->prefixIcon('heroicon-m-user-circle'),
 
-                                \Filament\Forms\Components\TextInput::make('last_name')
-                                    ->label('Nume')
-                                    ->required()
-                                    ->prefixIcon('heroicon-m-user-circle'),
+                                            \Filament\Forms\Components\TextInput::make('last_name')
+                                                ->label('Nume')
+                                                ->required()
+                                                ->prefixIcon('heroicon-m-user-circle'),
 
-                                \Filament\Forms\Components\TextInput::make('phone')
-                                    ->label('Telefon')
-                                    ->tel()
-                                    ->required()
-                                    ->prefixIcon('heroicon-m-phone'),
+                                            \Filament\Forms\Components\TextInput::make('phone')
+                                                ->label('Telefon')
+                                                ->tel()
+                                                ->required()
+                                                ->prefixIcon('heroicon-m-phone'),
 
-                                \Filament\Forms\Components\TextInput::make('email')
-                                    ->label('Email')
-                                    ->email()
-                                    ->prefixIcon('heroicon-m-envelope'),
+                                            \Filament\Forms\Components\TextInput::make('email')
+                                                ->label('Email')
+                                                ->email()
+                                                ->prefixIcon('heroicon-m-envelope'),
 
-                                \Filament\Forms\Components\Select::make('category')
-                                    ->label('Categorie')
-                                    ->options([
-                                        'default' => 'Standard',
-                                        'student' => 'Student',
-                                        'senior' => 'Pensionar',
-                                        'vip' => 'VIP',
-                                    ])
-                                    ->default('default')
-                                    ->prefixIcon('heroicon-m-tag')
-                                    ->required(),
+                                            \Filament\Forms\Components\Select::make('category')
+                                                ->label('Categorie')
+                                                ->options([
+                                                    'default' => 'Standard',
+                                                    'student' => 'Student',
+                                                    'senior' => 'Pensionar',
+                                                    'vip' => 'VIP',
+                                                ])
+                                                ->default('default')
+                                                ->prefixIcon('heroicon-m-tag')
+                                                ->required(),
 
-                                \Filament\Forms\Components\Select::make('status')
-                                    ->label('Statut')
-                                    ->options([
-                                        'ACTIVE' => 'Activ',
-                                        'INACTIVE' => 'Inactiv',
-                                        'EXPIRED' => 'Expirat',
-                                    ])
-                                    ->default('ACTIVE')
-                                    ->prefixIcon('heroicon-m-check-badge')
-                                    ->required(),
-                            ]),
-                        
-                        \Filament\Forms\Components\Placeholder::make('barcode')
-                            ->label('Cod de bare')
-                            ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
-                    ]),
+                                            \Filament\Forms\Components\Select::make('status')
+                                                ->label('Statut')
+                                                ->options([
+                                                    'ACTIVE' => 'Activ',
+                                                    'INACTIVE' => 'Inactiv',
+                                                    'EXPIRED' => 'Expirat',
+                                                ])
+                                                ->default('ACTIVE')
+                                                ->prefixIcon('heroicon-m-check-badge')
+                                                ->required(),
+                                        ]),
+                                    
+                                    \Filament\Forms\Components\Placeholder::make('barcode')
+                                        ->label('Cod de bare')
+                                        ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
+                                ]),
 
-                Section::make('Abonament & Plată')
-                    ->icon('heroicon-o-credit-card')
-                    ->description('Activează imediat.')
-                    ->visible(fn ($record) => ! ($record?->exists ?? false))
-                    ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                \Filament\Forms\Components\Toggle::make('activate_plan')
-                                    ->label('Activează Abonament')
-                                    ->reactive()
-                                    ->default(true),
+                            Section::make('Note / Observații')
+                                ->icon('heroicon-o-chat-bubble-bottom-center-text')
+                                ->collapsed()
+                                ->collapsible()
+                                ->schema([
+                                    \Filament\Forms\Components\Textarea::make('notes')
+                                        ->label(false)
+                                        ->placeholder('Observații despre membru...')
+                                        ->rows(3),
+                                ]),
+                        ])
+                        ->columnSpan(['default' => 12, 'lg' => 8]),
 
-                                \Filament\Forms\Components\Select::make('initial_plan_id')
-                                    ->label('Plan')
-                                    ->options(\App\Models\Plan::where('active', true)->pluck('name', 'id'))
-                                    ->required(fn ($get) => $get('activate_plan'))
-                                    ->visible(fn ($get) => $get('activate_plan'))
-                                    ->reactive()
-                                    ->afterStateUpdated(fn ($state, $set) => $set('initial_amount', \App\Models\Plan::find($state)?->price ?? 0)),
+                        // RIGHT (4/12) - Balanced sidebar
+                        Group::make([
+                            Section::make('Abonament & Plată')
+                                ->icon('heroicon-o-credit-card')
+                                ->description('Activează imediat.')
+                                ->visible(fn ($record) => ! ($record?->exists ?? false))
+                                ->schema([
+                                    \Filament\Forms\Components\Toggle::make('activate_plan')
+                                        ->label('Activează Abonament')
+                                        ->reactive()
+                                        ->default(true),
 
-                                \Filament\Forms\Components\TextInput::make('initial_amount')
-                                    ->label('Preț')
-                                    ->numeric()
-                                    ->prefix('RON')
-                                    ->required(fn ($get) => $get('activate_plan'))
-                                    ->visible(fn ($get) => $get('activate_plan')),
+                                    \Filament\Forms\Components\Select::make('initial_plan_id')
+                                        ->label('Plan')
+                                        ->options(\App\Models\Plan::where('active', true)->pluck('name', 'id'))
+                                        ->required(fn ($get) => $get('activate_plan'))
+                                        ->visible(fn ($get) => $get('activate_plan'))
+                                        ->reactive()
+                                        ->afterStateUpdated(fn ($state, $set) => $set('initial_amount', \App\Models\Plan::find($state)?->price ?? 0)),
 
-                                \Filament\Forms\Components\Select::make('initial_payment_method')
-                                    ->label('Metodă Plată')
-                                    ->options([
-                                        'cash' => 'Numerar',
-                                        'card' => 'Card',
-                                        'online' => 'Online',
-                                    ])
-                                    ->default('cash')
-                                    ->required(fn ($get) => $get('activate_plan'))
-                                    ->visible(fn ($get) => $get('activate_plan')),
-                            ])
-                    ]),
+                                    \Filament\Forms\Components\TextInput::make('initial_amount')
+                                        ->label('Preț')
+                                        ->numeric()
+                                        ->prefix('RON')
+                                        ->required(fn ($get) => $get('activate_plan'))
+                                        ->visible(fn ($get) => $get('activate_plan')),
 
-                Section::make('Note / Observații')
-                    ->icon('heroicon-o-chat-bubble-bottom-center-text')
-                    ->collapsed()
-                    ->collapsible()
-                    ->schema([
-                        \Filament\Forms\Components\Textarea::make('notes')
-                            ->label(false)
-                            ->placeholder('Observații despre membru...')
-                            ->rows(3),
-                    ]),
+                                    \Filament\Forms\Components\Select::make('initial_payment_method')
+                                        ->label('Metodă Plată')
+                                        ->options([
+                                            'cash' => 'Numerar',
+                                            'card' => 'Card',
+                                            'online' => 'Online',
+                                        ])
+                                        ->default('cash')
+                                        ->required(fn ($get) => $get('activate_plan'))
+                                        ->visible(fn ($get) => $get('activate_plan')),
+                                ]),
 
-                Section::make('Foto Profil')
-                    ->icon('heroicon-o-camera')
-                    ->collapsed()
-                    ->collapsible()
-                    ->schema([
-                        \Filament\Forms\Components\FileUpload::make('photo_url')
-                            ->label(false)
-                            ->image()
-                            ->directory('members'),
+                            Section::make('Foto Profil')
+                                ->icon('heroicon-o-camera')
+                                ->collapsed()
+                                ->collapsible()
+                                ->schema([
+                                    \Filament\Forms\Components\FileUpload::make('photo_url')
+                                        ->label(false)
+                                        ->image()
+                                        ->directory('members'),
+                                ]),
+                        ])
+                        ->columnSpan(['default' => 12, 'lg' => 4]),
                     ]),
 
                 Section::make('Lista Abonamente')

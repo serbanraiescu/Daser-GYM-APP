@@ -15,7 +15,7 @@ class ListMembers extends ListRecords
         return [
             CreateAction::make()
                 ->label('Adaugă membru')
-                ->modalWidth('5xl')
+                ->modalWidth('7xl')
                 ->after(function (array $data, \App\Models\Member $record) {
                     if ($data['activate_plan'] ?? false) {
                         $plan = \App\Models\Plan::find($data['initial_plan_id']);
