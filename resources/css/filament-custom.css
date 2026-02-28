@@ -12,3 +12,21 @@
         gap: 1rem !important;
     }
 }
+
+/* Ultra-wide modal force */
+.daser-wide-modal {
+    max-width: 92vw !important;
+}
+
+.daser-wide-modal .fi-modal-window {
+    max-width: 92vw !important;
+    width: 92vw !important;
+}
+
+.daser-wide-modal .fi-modal-content,
+.daser-wide-modal .fi-modal-content>div,
+.daser-wide-modal .fi-fo-form,
+.daser-wide-modal .fi-sc {
+    width: 100% !important;
+    max-width: none !important;
+}
