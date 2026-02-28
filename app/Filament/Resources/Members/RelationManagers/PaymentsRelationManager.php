@@ -7,6 +7,9 @@ use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 
 class PaymentsRelationManager extends RelationManager
 {
@@ -79,12 +82,11 @@ class PaymentsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                // We typically use the "Renew" action on the main list or "Add" here if needed
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

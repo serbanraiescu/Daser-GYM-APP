@@ -15,6 +15,7 @@ use Filament\Notifications\Notification;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DateTimePicker;
+use Illuminate\Support\Facades\DB;
 
 class MembersTable
 {
@@ -112,7 +113,7 @@ class MembersTable
                                 ->send();
                         }
                     }),
-                \Filament\Tables\Actions\Action::make('renew')
+                \Filament\Actions\Action::make('renew')
                     ->label('Reînnoire')
                     ->icon('heroicon-o-arrow-path')
                     ->color('success')
