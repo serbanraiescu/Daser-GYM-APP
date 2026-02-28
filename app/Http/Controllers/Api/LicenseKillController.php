@@ -15,11 +15,18 @@ class LicenseKillController extends Controller
         $token = $request->input('kill_token') ?? $request->header('X-Kill-Token');
         $expectedToken = app(SettingsService::class)->get('license_kill_token');
 
+        \Illuminate\Support\Facades\Log::info('License Kill Switch Attempted', [
+            'token_provided' => $token,
+            'ip' => $request->ip()
+        ]);
+
         if (empty($expectedToken) || $token !== $expectedToken) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         app(LicenseService::class)->revoke();
+        
+        \Illuminate\Support\Facades\Log::warning('License REVOKED via Kill Switch');
 
         return response()->json(['message' => 'License revoked successfully']);
     }
