@@ -35,46 +35,65 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
+        :root { --primary: {{ $primaryColor }}; }
         body { font-family: 'Outfit', sans-serif; }
+        .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.8); }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-900 antialiased min-h-screen flex flex-col">
+<body class="bg-gray-50 text-slate-900 antialiased min-h-screen flex flex-col pt-20">
 
-    <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <!-- Global Header -->
+    <nav class="fixed top-0 w-full z-50 glass border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="/" class="flex items-center gap-3">
                 @if($logo)
                     <img src="{{ str_starts_with($logo, 'http') ? $logo : asset('storage/' . $logo) }}" alt="{{ $brandName }} Logo" class="h-10 w-auto">
                 @endif
-                <span class="text-xl font-bold tracking-tight text-slate-800">{{ $brandName }}</span>
+                <span class="font-bold text-2xl tracking-tight text-slate-900">{{ $brandName }}</span>
             </a>
-            <a href="/" class="text-sm font-semibold text-primary hover:underline">
-                &larr; Înapoi pe Acasă
-            </a>
+
+            <div class="hidden md:flex items-center gap-10 font-semibold text-slate-600">
+                @foreach($navItems as $item)
+                    @if($item['visible'] ?? true)
+                        <a href="{{ $item['href'] }}" class="hover:text-[color:var(--primary)] transition-colors">{{ $item['label'] }}</a>
+                    @endif
+                @endforeach
+                
+                <a href="/app/login" class="text-white px-6 py-2.5 rounded-full hover:opacity-90 transition-all shadow-lg" style="background-color: var(--primary)">
+                    Autentificare
+                </a>
+            </div>
+            
+            <!-- Mobile "Back" link for simplicity on this view -->
+            <div class="md:hidden">
+                <a href="/" class="text-sm font-bold text-[color:var(--primary)]">ACASĂ</a>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Main Content -->
     <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <article class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-12">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-8 border-b border-gray-100 pb-6">
+        <article class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-12">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-8 border-b border-gray-100 pb-6">
                 {{ $page->title }}
             </h1>
             
-            <div class="prose prose-slate prose-primary max-w-none">
+            <div class="prose prose-slate prose-primary max-w-none prose-headings:text-slate-950 prose-a:text-[color:var(--primary)]">
                 {!! $page->content !!}
             </div>
             
             @if(!empty($page->faq_data) && is_array($page->faq_data) && count($page->faq_data) > 0)
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6">Întrebări Frecvente</h2>
+            <div class="mt-12 pt-12 border-t border-gray-100">
+                <h2 class="text-2xl font-bold text-slate-950 mb-8 flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-lg flex items-center justify-center text-white" style="background-color: var(--primary)">?</span>
+                    Întrebări Frecvente
+                </h2>
                 <div class="space-y-6">
                     @foreach($page->faq_data as $qa)
                         @if(isset($qa['question']) && isset($qa['answer']))
-                        <div class="bg-gray-50 rounded-lg p-6">
-                            <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ $qa['question'] }}</h3>
-                            <p class="text-slate-600">{{ $qa['answer'] }}</p>
+                        <div class="bg-gray-50/50 rounded-2xl p-6 border border-gray-100">
+                            <h3 class="text-lg font-bold text-slate-900 mb-3">{{ $qa['question'] }}</h3>
+                            <p class="text-slate-600 leading-relaxed">{{ $qa['answer'] }}</p>
                         </div>
                         @endif
                     @endforeach
@@ -84,13 +103,49 @@
         </article>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 py-12 text-center text-slate-400">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-            @if($logo)
-                <img src="{{ str_starts_with($logo, 'http') ? $logo : asset('storage/' . $logo) }}" alt="Logo Footer" class="h-8 opacity-75 grayscale mb-6">
-            @endif
-            <p class="text-sm">&copy; {{ date('Y') }} {{ $brandName }}. {{ $copyright }}</p>
+    <!-- Global Footer -->
+    <footer class="bg-slate-950 text-white pt-24 pb-12 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-16 mb-20">
+                <div class="col-span-2 space-y-8 text-center md:text-left">
+                    <a href="/" class="flex items-center gap-3 justify-center md:justify-start">
+                        @if($logo)
+                            <img src="{{ str_starts_with($logo, 'http') ? $logo : asset('storage/' . $logo) }}" alt="Logo Footer" class="h-10 w-auto invert opacity-80">
+                        @endif
+                        <span class="font-bold text-3xl tracking-tight text-white">{{ $brandName }}</span>
+                    </a>
+                    <p class="text-slate-400 text-lg leading-relaxed max-w-md">
+                        {{ $footerText }}
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    <h5 class="font-bold text-xl text-white">Informații</h5>
+                    <ul class="space-y-4 text-slate-400">
+                        @foreach($footerLinks as $link)
+                            @if($link['visible'] ?? true)
+                                <li><a href="{{ $link['href'] }}" class="hover:text-white transition-colors">{{ $link['label'] }}</a></li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="space-y-6">
+                    <h5 class="font-bold text-xl text-white">Social Media</h5>
+                    <div class="flex gap-4 flex-wrap justify-center md:justify-start">
+                        @if($socials['facebook']) <a href="{{ $socials['facebook'] }}" target="_blank" class="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center hover:bg-white hover:text-black transition-all">FB</a> @endif
+                        @if($socials['instagram']) <a href="{{ $socials['instagram'] }}" target="_blank" class="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center hover:bg-white hover:text-black transition-all">IG</a> @endif
+                        @if($socials['tiktok']) <a href="{{ $socials['tiktok'] }}" target="_blank" class="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center hover:bg-white hover:text-black transition-all">TT</a> @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm gap-4">
+                <div class="text-center md:text-left">
+                    <p>&copy; {{ date('Y') }} Daser Enterprise SRL. Licensed Software – All Rights Reserved</p>
+                </div>
+                <p>Powered by <a href="https://daserdesign.ro" target="_blank" class="font-semibold hover:text-white transition-colors">Daser Technologies</a></p>
+            </div>
         </div>
     </footer>
 

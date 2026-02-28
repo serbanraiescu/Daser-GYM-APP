@@ -12,16 +12,56 @@ class PageController extends Controller
     {
         $page = Page::where('slug', $slug)->where('is_active', true)->firstOrFail();
         
-        // Fetch branding for the HTML layout
-        $brandName = Setting::where('key', 'gym_name')->first()?->value ?? 'Daser Gym';
-        $logo = Setting::where('key', 'gym_logo')->first()?->value;
-        $primaryColor = Setting::where('key', 'gym_primary_color')->first()?->value ?? '#3b82f6';
+        // Fetch settings for global elements
+        $settings = Setting::where('is_public', true)
+            ->get()
+            ->keyBy('key');
+
+        $get = function ($key, $default = null) use ($settings) {
+            if (!$settings->has($key)) return $default;
+            $setting = $settings->get($key);
+            $value = $setting->value;
+            return match ($setting->type) {
+                'json' => json_decode($value, true) ?? [],
+                'bool' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+                'int' => (int) $value,
+                default => $value,
+            };
+        };
+
+        $brandName = $get('website.brand.name', $get('gym_name', 'Daser Gym'));
+        $logo = $get('website.brand.logo_url', $get('gym_logo'));
+        $primaryColor = $get('website.theme.primary_color', $get('gym_primary_color', '#3b82f6'));
+        $secondaryColor = $get('website.theme.secondary_color', '#1e293b');
+        
+        $navItems = $get('website.header.nav.items', [
+            ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
+            ['label' => 'Abonamente', 'href' => '/#abonamente', 'visible' => true],
+            ['label' => 'Contact', 'href' => '/#contact', 'visible' => true],
+        ]);
+
+        $footerText = $get('website.footer.text_left', 'Misiunea noastră este să oferim un mediu premium și inspirațional.');
+        $copyright = $get('website.footer.copyright_text', 'Toate drepturile rezervate.');
+        
+        $staticFooterLinks = $get('website.footer.links', [
+            ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
+        ]);
+
+        $dynamicFooterLinks = Page::where('is_active', true)
+            ->where('show_in_footer', true)
+            ->get()
+            ->map(function($p) {
+                return ['label' => $p->title, 'href' => '/p/' . $p->slug, 'visible' => true];
+            })
+            ->toArray();
+
+        $footerLinks = array_merge($staticFooterLinks, $dynamicFooterLinks);
+
         $socials = [
-            'facebook' => Setting::where('key', 'social_facebook')->first()?->value,
-            'instagram' => Setting::where('key', 'social_instagram')->first()?->value,
-            'tiktok' => Setting::where('key', 'social_tiktok')->first()?->value,
+            'facebook' => $get('social_facebook'),
+            'instagram' => $get('social_instagram'),
+            'tiktok' => $get('social_tiktok'),
         ];
-        $copyright = Setting::where('key', 'website.footer.copyright_text')->first()?->value ?? 'Toate drepturile rezervate.';
 
         // Process FAQ JSON into Schema
         $faqSchema = null;
@@ -34,7 +74,7 @@ class PageController extends Controller
                         "name" => strip_tags($qa['question']),
                         "acceptedAnswer" => [
                             "@type" => "Answer",
-                            "text" => strip_tags($qa['answer']) // Strip tags to ensure valid JSON string for schema
+                            "text" => strip_tags($qa['answer'])
                         ]
                     ];
                 }
@@ -56,6 +96,10 @@ class PageController extends Controller
             "description" => $page->meta_description ?? substr(strip_tags($page->content), 0, 160)
         ];
 
-        return view('pages.show', compact('page', 'brandName', 'logo', 'primaryColor', 'socials', 'copyright', 'faqSchema', 'pageSchema'));
+        return view('pages.show', compact(
+            'page', 'brandName', 'logo', 'primaryColor', 'secondaryColor', 
+            'navItems', 'footerText', 'footerLinks', 'socials', 'copyright', 
+            'faqSchema', 'pageSchema'
+        ));
     }
 }
