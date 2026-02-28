@@ -22,14 +22,49 @@ Route::get('/force-migrate', function() {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         $output .= "<pre>" . (\Illuminate\Support\Facades\Artisan::output() ?: "No new migrations.") . "</pre>";
 
-        // 2. Storage Link
-        $output .= "<h2>2. Storage Link</h2>";
-        $publicStoragePath = public_path('storage');
-        if (file_exists($publicStoragePath) && !is_link($publicStoragePath)) {
-            $output .= "<p style='color:orange'>Warning: <b>{$publicStoragePath}</b> is a real directory, not a symlink. Please delete it via cPanel File Manager for the automatic link to work.</p>";
-        } else {
-            \Illuminate\Support\Facades\Artisan::call('storage:link');
-            $output .= "<pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+        // 2. Storage Link (Aggressive)
+        $output .= "<h2>2. Storage Link (Aggressive)</h2>";
+        $target = storage_path('app/public');
+        
+        // Potential link locations
+        $links = [
+            public_path('storage'),
+            base_path('../public_html/storage'),
+            base_path('public/storage'),
+        ];
+
+        foreach ($links as $link) {
+            $output .= "<li>Checking: <code>$link</code>... ";
+            if (file_exists($link)) {
+                if (is_link($link)) {
+                    $output .= "<span style='color:green'>Already a link.</span>";
+                } else {
+                    $output .= "<span style='color:orange'>Physical directory found. DELETING... </span>";
+                    // Delete physical directory
+                    $it = new RecursiveIteratorIterator(
+                        new RecursiveDirectoryIterator($link, RecursiveDirectoryIterator::SKIP_DOTS),
+                        RecursiveIteratorIterator::CHILD_FIRST
+                    );
+                    foreach($it as $file) {
+                        if ($file->isDir()){ rmdir($file->getRealPath()); } else { unlink($file->getRealPath()); }
+                    }
+                    rmdir($link);
+                    $output .= "<span style='color:red'>Deleted.</span>";
+                }
+            } else {
+                $output .= "Not found. ";
+            }
+
+            // Create link if it doesn't exist
+            if (!file_exists($link)) {
+                if (@symlink($target, $link)) {
+                    $output .= " <span style='color:green'>Linked successfully!</span>";
+                } else {
+                    $error = error_get_last();
+                    $output .= " <span style='color:red'>Failed to link: " . ($error['message'] ?? 'Unknown error') . "</span>";
+                }
+            }
+            $output .= "</li>";
         }
 
         // 3. Cache Clear
