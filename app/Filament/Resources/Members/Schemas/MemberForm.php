@@ -54,14 +54,15 @@ class MemberForm
                                 ])
                                 ->columns(2),
 
-                            \Filament\Schemas\Components\Section::make('Note')
+                            \Filament\Schemas\Components\Section::make('Note / Observații')
                                 ->schema([
                                     \Filament\Forms\Components\Textarea::make('notes')
                                         ->label(false)
-                                        ->placeholder('Adaugă observații aici...')
-                                        ->rows(3),
+                                        ->placeholder('Observații despre membru...')
+                                        ->rows(2),
                                 ])
-                                ->collapsible(),
+                                ->collapsible()
+                                ->collapsed(),
                         ])
                         ->columnSpan(8),
                         
