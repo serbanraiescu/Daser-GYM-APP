@@ -10,7 +10,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
