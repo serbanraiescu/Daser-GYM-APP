@@ -10,111 +10,115 @@ class MemberForm
     {
         return $schema
             ->components([
-                \Filament\Schemas\Components\Section::make('Informații Personale')
+                \Filament\Schemas\Components\Grid::make(2)
                     ->schema([
-                        \Filament\Forms\Components\TextInput::make('first_name')
-                            ->label('Prenume')
-                            ->required(),
-                        \Filament\Forms\Components\TextInput::make('last_name')
-                            ->label('Nume')
-                            ->required(),
-                        \Filament\Forms\Components\TextInput::make('email')
-                            ->label('Email')
-                            ->email(),
-                        \Filament\Forms\Components\TextInput::make('phone')
-                            ->label('Telefon')
-                            ->tel()
-                            ->required(),
-                        \Filament\Forms\Components\Placeholder::make('barcode')
-                            ->label('Cod de bare (8 Caractere)')
-                            ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la activarea contului (dacă are acces).'),
-                    ])->columns(2),
-                \Filament\Schemas\Components\Section::make('Statut și Categorie')
-                    ->schema([
-                        \Filament\Forms\Components\Select::make('status')
-                            ->label('Statut')
-                            ->options([
-                                'ACTIVE' => 'Activ',
-                                'INACTIVE' => 'Inactiv',
-                                'EXPIRED' => 'Expirat',
-                            ])
-                            ->default('INACTIVE')
-                            ->required(),
-                        \Filament\Forms\Components\Select::make('category')
-                            ->label('Categorie')
-                            ->options([
-                                'default' => 'Standard',
-                                'student' => 'Student',
-                                'senior' => 'Pensionar',
-                                'vip' => 'VIP',
-                            ])
-                            ->default('default')
-                            ->required(),
-                        \Filament\Forms\Components\FileUpload::make('photo_url')
-                            ->label('Fotografie Profil')
-                            ->image()
-                            ->directory('members'),
-                    ])->columns(2),
-                \Filament\Schemas\Components\Section::make('Detalii Suplimentare')
+                        \Filament\Schemas\Components\Section::make('Informații Membru')
+                            ->schema([
+                                \Filament\Forms\Components\TextInput::make('first_name')
+                                    ->label('Prenume')
+                                    ->required(),
+                                \Filament\Forms\Components\TextInput::make('last_name')
+                                    ->label('Nume')
+                                    ->required(),
+                                \Filament\Forms\Components\TextInput::make('phone')
+                                    ->label('Telefon')
+                                    ->tel()
+                                    ->required(),
+                                \Filament\Forms\Components\TextInput::make('email')
+                                    ->label('Email')
+                                    ->email(),
+                                \Filament\Forms\Components\Select::make('category')
+                                    ->label('Categorie')
+                                    ->options([
+                                        'default' => 'Standard',
+                                        'student' => 'Student',
+                                        'senior' => 'Pensionar',
+                                        'vip' => 'VIP',
+                                    ])
+                                    ->default('default')
+                                    ->required(),
+                                \Filament\Forms\Components\Select::make('status')
+                                    ->label('Statut')
+                                    ->options([
+                                        'ACTIVE' => 'Activ',
+                                        'INACTIVE' => 'Inactiv',
+                                        'EXPIRED' => 'Expirat',
+                                    ])
+                                    ->default('ACTIVE')
+                                    ->required(),
+                            ])->columns(2),
+                        
+                        \Filament\Schemas\Components\Group::make([
+                            \Filament\Schemas\Components\Section::make('Abonament Inițial & Plată')
+                                ->description('Activează abonamentul acum.')
+                                ->visible(fn ($livewire) => $livewire instanceof \App\Filament\Resources\Members\Pages\CreateMember)
+                                ->schema([
+                                    \Filament\Forms\Components\Toggle::make('activate_plan')
+                                        ->label('Activează Abonament')
+                                        ->reactive()
+                                        ->default(true),
+                                    \Filament\Forms\Components\Select::make('initial_plan_id')
+                                        ->label('Plan')
+                                        ->options(\App\Models\Plan::where('active', true)->pluck('name', 'id'))
+                                        ->required(fn ($get) => $get('activate_plan'))
+                                        ->visible(fn ($get) => $get('activate_plan'))
+                                        ->reactive()
+                                        ->afterStateUpdated(fn ($state, $set) => $set('initial_amount', \App\Models\Plan::find($state)?->price ?? 0)),
+                                    \Filament\Forms\Components\TextInput::make('initial_amount')
+                                        ->label('Preț')
+                                        ->numeric()
+                                        ->required(fn ($get) => $get('activate_plan'))
+                                        ->visible(fn ($get) => $get('activate_plan')),
+                                    \Filament\Forms\Components\Select::make('initial_payment_method')
+                                        ->label('Metodă Plată')
+                                        ->options([
+                                            'cash' => 'Numerar',
+                                            'card' => 'Card',
+                                            'online' => 'Online',
+                                        ])
+                                        ->default('cash')
+                                        ->required(fn ($get) => $get('activate_plan'))
+                                        ->visible(fn ($get) => $get('activate_plan')),
+                                ]),
+                                
+                            \Filament\Schemas\Components\Section::make('Foto Profil')
+                                ->schema([
+                                    \Filament\Forms\Components\FileUpload::make('photo_url')
+                                        ->label(false)
+                                        ->image()
+                                        ->directory('members'),
+                                ])->collapsible(),
+                        ]),
+                    ]),
+
+                \Filament\Schemas\Components\Section::make('Note')
                     ->schema([
                         \Filament\Forms\Components\Textarea::make('notes')
-                            ->label('Note / Observații')
-                            ->rows(3),
-                    ]),
-                \Filament\Schemas\Components\Section::make('Abonament Inițial & Plată')
-                    ->description('Completează dacă dorești să activezi un abonament și să înregistrezi plata acum.')
-                    ->visible(fn ($livewire) => $livewire instanceof \App\Filament\Resources\Members\Pages\CreateMember)
-                    ->schema([
-                        \Filament\Forms\Components\Toggle::make('activate_plan')
-                            ->label('Activează Abonament Acum')
-                            ->reactive()
-                            ->default(false),
-                        \Filament\Schemas\Components\Grid::make(3)
-                            ->visible(fn ($get) => $get('activate_plan'))
-                            ->schema([
-                                \Filament\Forms\Components\Select::make('initial_plan_id')
-                                    ->label('Abonament')
-                                    ->options(\App\Models\Plan::where('active', true)->pluck('name', 'id'))
-                                    ->required(fn ($get) => $get('activate_plan'))
-                                    ->reactive()
-                                    ->afterStateUpdated(fn ($state, $set) => $set('initial_amount', \App\Models\Plan::find($state)?->price ?? 0)),
-                                \Filament\Forms\Components\TextInput::make('initial_amount')
-                                    ->label('Sumă Incasată')
-                                    ->numeric()
-                                    ->required(fn ($get) => $get('activate_plan')),
-                                \Filament\Forms\Components\Select::make('initial_payment_method')
-                                    ->label('Metodă Plată')
-                                    ->options([
-                                        'cash' => 'Numerar',
-                                        'card' => 'Card',
-                                        'online' => 'Online',
-                                    ])
-                                    ->default('cash')
-                                    ->required(fn ($get) => $get('activate_plan')),
-                            ]),
-                    ]),
-                \Filament\Schemas\Components\Section::make('Abonamente (Înscrieri)')
-                    ->description('Adaugă sau gestionează abonamentele acestui membru.')
+                            ->label(false)
+                            ->rows(2),
+                    ])->collapsible()->collapsed(),
+
+                \Filament\Schemas\Components\Section::make('Lista Abonamente')
+                    ->visible(fn ($livewire) => $livewire instanceof \App\Filament\Resources\Members\Pages\EditMember)
                     ->schema([
                         \Filament\Forms\Components\Repeater::make('memberships')
                             ->relationship()
-                            ->label('Lista Abonamente')
+                            ->label(false)
                             ->addActionLabel('Adaugă Abonament Nou')
                             ->schema([
                                 \Filament\Forms\Components\Select::make('plan_id')
                                     ->relationship('plan', 'name')
-                                    ->label('Abonament (Plan)')
-                                    ->required()
-                                    ->native(false),
+                                    ->label('Plan')
+                                    ->required(),
                                 \Filament\Forms\Components\DateTimePicker::make('starts_at')
-                                    ->label('Data de Început')
+                                    ->label('Început')
                                     ->required()
                                     ->default(now()),
                                 \Filament\Forms\Components\DateTimePicker::make('expires_at')
-                                    ->label('Data Expirării')
+                                    ->label('Expirare')
                                     ->required(),
                                 \Filament\Forms\Components\Select::make('status')
-                                    ->label('Status Abonament')
+                                    ->label('Status')
                                     ->options([
                                         'ACTIVE' => 'Activ',
                                         'EXPIRED' => 'Expirat',
