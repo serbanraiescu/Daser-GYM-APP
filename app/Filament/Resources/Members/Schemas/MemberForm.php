@@ -12,10 +12,10 @@ class MemberForm
             ->components([
                 \Filament\Schemas\Components\Grid::make([
                     'default' => 1,
-                    'lg' => 12,
+                    'lg' => 2,
                 ])
                 ->schema([
-                    // Left Side (9 columns / 12 = 75%)
+                    // Left Side (1/2)
                     \Filament\Schemas\Components\Group::make([
                         \Filament\Schemas\Components\Section::make('Informații Membru')
                             ->icon('heroicon-o-user')
@@ -62,10 +62,7 @@ class MemberForm
                                     ->label('Cod de bare')
                                     ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
                             ])
-                            ->columns([
-                                'default' => 1,
-                                'xl' => 2,
-                            ]),
+                            ->columns(2),
 
                         \Filament\Schemas\Components\Section::make('Note / Observații')
                             ->icon('heroicon-o-chat-bubble-bottom-center-text')
@@ -73,17 +70,14 @@ class MemberForm
                                 \Filament\Forms\Components\Textarea::make('notes')
                                     ->label(false)
                                     ->placeholder('Observații despre membru...')
-                                    ->rows(3),
+                                    ->rows(4),
                             ])
                             ->collapsible()
                             ->collapsed(),
                     ])
-                    ->columnSpan([
-                        'default' => 1,
-                        'lg' => 9,
-                    ]),
+                    ->columnSpan(1),
                     
-                    // Right Side (3 columns / 12 = 25%)
+                    // Right Side (1/2)
                     \Filament\Schemas\Components\Group::make([
                         \Filament\Schemas\Components\Section::make('Abonament & Plată')
                             ->icon('heroicon-o-credit-card')
@@ -128,10 +122,7 @@ class MemberForm
                                     ->directory('members'),
                             ])->collapsible()->collapsed(),
                     ])
-                    ->columnSpan([
-                        'default' => 1,
-                        'lg' => 3,
-                    ]),
+                    ->columnSpan(1),
                 ]),
 
                 \Filament\Schemas\Components\Section::make('Lista Abonamente')
