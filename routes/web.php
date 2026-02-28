@@ -12,6 +12,12 @@ Route::get('/termeni-si-conditii', [LandingPageController::class, 'terms'])->nam
 Route::get('/website-config', [PublicWebsiteController::class, 'getWebsiteConfig'])->name('public.website');
 Route::get('/public/website', [PublicWebsiteController::class, 'getWebsiteConfig']); // Legacy compatibility
 
+// License Re-verification Route
+Route::get('/admin/license/reverify', function() {
+    app(\App\Services\LicenseService::class)->checkLicense(true);
+    return redirect('/admin');
+})->name('license.reverify');
+
 // Emergency Route for Shared Hosting (Zero-Terminal)
 Route::get('/force-migrate', function() {
     try {

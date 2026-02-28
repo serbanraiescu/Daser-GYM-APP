@@ -5,6 +5,6 @@
         Licența a expirat sau a fost revocată. Vă rugăm să contactați administratorul Daser Design pentru reactivare.
     </p>
     <div style="margin-top: 30px;">
-        <a href="https://daserdesign.ro" target="_blank" style="background:#3b82f6; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:bold;">Contact Accept</a>
+        <a href="/admin/license/reverify" style="background:#3b82f6; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:bold; display: inline-block;">Re-verifică Licența</a>
     </div>
 </div>

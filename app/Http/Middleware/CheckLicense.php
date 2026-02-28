@@ -16,7 +16,8 @@ class CheckLicense
         // Don't check on migration, livewire uploads, or the settings page itself (so you can always activate)
         if ($request->is('force-migrate*') || 
             $request->is('livewire/upload*') || 
-            $request->is('admin/manage-settings*')) {
+            $request->is('admin/manage-settings*') ||
+            $request->is('admin/license/reverify*')) {
             return $next($request);
         }
 
