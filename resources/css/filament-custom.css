@@ -12,3 +12,17 @@
         gap: 1rem !important;
     }
 }
+
+/* Make ONLY this modal truly wide */
+.daser-wide-modal {
+    max-width: 92vw !important;
+    /* window width */
+}
+
+.daser-wide-modal .fi-modal-content,
+.daser-wide-modal .fi-modal-content>div,
+.daser-wide-modal .fi-fo-form {
+    width: 100% !important;
+    max-width: none !important;
+    /* <- asta e cheia */
+}
