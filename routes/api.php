@@ -8,3 +8,5 @@ Route::get('/public/settings', [\App\Http\Controllers\Api\PublicSettingControlle
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::post('/v1/license-kill', \App\Http\Controllers\Api\LicenseKillController::class);

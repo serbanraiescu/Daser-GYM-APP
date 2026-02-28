@@ -62,6 +62,16 @@ class LicenseService
         return $this->checkLicense(true);
     }
 
+    public function revoke(): void
+    {
+        $this->updateLicenseCache([
+            'status' => 'denied',
+            'days_left' => 0,
+            'is_grace_period' => false,
+            'grace_days_left' => null,
+        ]);
+    }
+
     protected function updateLicenseCache(array $data): void
     {
         Setting::where('key', 'license_status_cache')->update(['value' => json_encode($data)]);

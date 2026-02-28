@@ -36,6 +36,13 @@ return new class extends Migration
                 'group' => 'system',
                 'is_public' => false,
             ],
+            [
+                'key' => 'license_kill_token',
+                'value' => 'SecretPassword123',
+                'type' => 'string',
+                'group' => 'system',
+                'is_public' => false,
+            ],
         ];
 
         foreach ($settings as $setting) {
@@ -45,6 +52,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Setting::whereIn('key', ['license_key', 'license_status_cache', 'license_last_check'])->delete();
+        Setting::whereIn('key', ['license_key', 'license_status_cache', 'license_last_check', 'license_kill_token'])->delete();
     }
 };

@@ -133,6 +133,13 @@ class ManageSettings extends Page implements HasSchemas
                                 \Filament\Forms\Components\Placeholder::make('license_last_check_display')
                                     ->label('Ultima Verificare')
                                     ->content(fn () => Setting::where('key', 'license_last_check')->first()?->value ?? 'Niciodată'),
+
+                                TextInput::make('license_kill_token')
+                                    ->label('Kill Token (Secret)')
+                                    ->password()
+                                    ->readOnly()
+                                    ->helperText('Folosiți acest token în Master App pentru Revocare Imediată.')
+                                    ->copyable(),
                             ]),
                     ])
             ])
