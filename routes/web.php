@@ -67,6 +67,19 @@ Route::get('/force-migrate', function() {
             $output .= "</li>";
         }
 
+        // 3. .htaccess update for Symlinks
+        $output .= "<h2>3. .htaccess Patch</h2>";
+        $htaccessPath = public_path('.htaccess');
+        if (file_exists($htaccessPath)) {
+            $content = file_get_contents($htaccessPath);
+            if (!str_contains($content, 'Options +FollowSymLinks')) {
+                file_put_contents($htaccessPath, "Options +FollowSymLinks\n" . $content);
+                $output .= "<p style='color:green'>Added <b>Options +FollowSymLinks</b> to .htaccess</p>";
+            } else {
+                $output .= "<p>Already has FollowSymLinks.</p>";
+            }
+        }
+
         // 3. Cache Clear
         $output .= "<h2>3. Cache Clearing</h2>";
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
@@ -100,7 +113,20 @@ Route::get('/force-migrate', function() {
         $output .= "<li><b>Is Link:</b> " . (is_link(public_path('storage')) ? "YES" : "NO") . "</li>";
         $output .= "<li><b>Target Exists:</b> " . (file_exists(public_path('storage')) ? "YES" : "NO") . "</li>";
         $output .= "<li><b>Symlink Function Available:</b> " . (function_exists('symlink') ? "YES" : "NO") . "</li>";
+        $output .= "<li><b>App Dir Permissions:</b> " . substr(sprintf('%o', fileperms(base_path())), -4) . " (Recommended: 0755)</li>";
+        $output .= "<li><b>Public Dir Permissions:</b> " . substr(sprintf('%o', fileperms(public_path())), -4) . " (Recommended: 0755)</li>";
         $output .= "</ul>";
+
+        // Try listing a file if possible
+        $output .= "<h3>Recent Assets</h3>";
+        if (file_exists($target)) {
+            $files = array_diff(scandir($target), array('.', '..'));
+            $output .= "<ul>";
+            foreach (array_slice($files, 0, 5) as $f) {
+                $output .= "<li>$f</li>";
+            }
+            $output .= "</ul>";
+        }
 
         return $output;
     } catch (\Exception $e) {
