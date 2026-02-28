@@ -64,21 +64,30 @@
                 </a>
             </div>
             
-            <!-- Mobile "Back" link for simplicity on this view -->
             <div class="md:hidden">
                 <a href="/" class="text-sm font-bold text-[color:var(--primary)]">ACASĂ</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <article class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-12">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-950 mb-8 border-b border-gray-100 pb-6">
+    <!-- Page Hero Banner -->
+    <section class="relative pt-32 pb-24 overflow-hidden" style="background: linear-gradient(135deg, {{ $secondaryColor }}, #000)">
+        <!-- Subtle Glow Effects -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[color:var(--primary)] opacity-10 blur-[120px] rounded-full -mr-64 -mt-64"></div>
+        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[color:var(--primary)] opacity-5 blur-[80px] rounded-full -ml-32 -mb-32"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            <span class="inline-block text-[color:var(--primary)] font-bold tracking-[0.2em] uppercase text-xs mb-4">INFORMAȚII {{ $brandName }}</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight">
                 {{ $page->title }}
             </h1>
-            
-            <div class="prose prose-slate prose-primary max-w-none prose-headings:text-slate-950 prose-a:text-[color:var(--primary)]">
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full -mt-10 relative z-20">
+        <article class="bg-white rounded-[2rem] shadow-2xl border border-gray-100 p-8 sm:p-14">
+            <div class="prose prose-slate prose-primary max-w-none prose-headings:text-slate-950 prose-a:text-[color:var(--primary)] prose-lg leading-relaxed">
                 {!! $page->content !!}
             </div>
             
