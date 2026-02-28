@@ -12,11 +12,17 @@ class MemberForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
-            ->columns(12) // IMPORTANT
-            ->extraAttributes(['class' => 'w-full']) // IMPORTANT
+            ->columns(12)
+            ->extraAttributes([
+                'class' => 'w-full',
+                'style' => 'width: 100% !important; max-width: none !important;',
+            ])
             ->components([
                 Grid::make(12)
-                    ->extraAttributes(['class' => 'w-full']) // IMPORTANT
+                    ->extraAttributes([
+                        'class' => 'w-full',
+                        'style' => 'width: 100% !important; max-width: none !important;',
+                    ])
                     ->schema([
                         // LEFT (8/12)
                         Group::make([
@@ -82,7 +88,8 @@ class MemberForm
                                         ->rows(4),
                                 ])
                                 ->collapsible(),
-                        ])->columnSpan(['default' => 12, 'lg' => 8]),
+                        ])
+                        ->columnSpan(['default' => 12, 'lg' => 8]),
 
                         // RIGHT (4/12)
                         Group::make([
@@ -132,7 +139,8 @@ class MemberForm
                                         ->directory('members'),
                                 ])
                                 ->collapsible(),
-                        ])->columnSpan(['default' => 12, 'lg' => 4]),
+                        ])
+                        ->columnSpan(['default' => 12, 'lg' => 4]),
                     ]),
 
                 Section::make('Lista Abonamente')
