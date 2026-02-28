@@ -60,7 +60,6 @@ class MemberForm
                                     ->required(),
                                 \Filament\Forms\Components\Placeholder::make('barcode')
                                     ->label('Cod de bare')
-                                    ->prefixIcon('heroicon-m-qr-code')
                                     ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
                             ])
                             ->columns(2),
