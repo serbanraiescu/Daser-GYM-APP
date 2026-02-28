@@ -34,18 +34,33 @@ class PageController extends Controller
         $primaryColor = $get('website.theme.primary_color', $get('gym_primary_color', '#3b82f6'));
         $secondaryColor = $get('website.theme.secondary_color', '#1e293b');
         
-        $navItems = $get('website.header.nav.items', [
+        $navItems = array_map(function($item) {
+            if (isset($item['href']) && str_starts_with($item['href'], '#')) {
+                $item['href'] = '/' . $item['href'];
+            }
+            return $item;
+        }, $get('website.header.nav.items', [
             ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
             ['label' => 'Abonamente', 'href' => '/#abonamente', 'visible' => true],
             ['label' => 'Contact', 'href' => '/#contact', 'visible' => true],
-        ]);
+        ]));
+
+        $cta = [
+            'label' => $get('website.header.cta.primary.label', 'Autentificare'),
+            'href' => $get('website.header.cta.primary.href', '/app/login'),
+        ];
 
         $footerText = $get('website.footer.text_left', 'Misiunea noastră este să oferim un mediu premium și inspirațional.');
         $copyright = $get('website.footer.copyright_text', 'Toate drepturile rezervate.');
         
-        $staticFooterLinks = $get('website.footer.links', [
+        $staticFooterLinks = array_map(function($item) {
+            if (isset($item['href']) && str_starts_with($item['href'], '#')) {
+                $item['href'] = '/' . $item['href'];
+            }
+            return $item;
+        }, $get('website.footer.links', [
             ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
-        ]);
+        ]));
 
         $dynamicFooterLinks = Page::where('is_active', true)
             ->where('show_in_footer', true)
@@ -98,7 +113,7 @@ class PageController extends Controller
 
         return view('pages.show', compact(
             'page', 'brandName', 'logo', 'primaryColor', 'secondaryColor', 
-            'navItems', 'footerText', 'footerLinks', 'socials', 'copyright', 
+            'navItems', 'cta', 'footerText', 'footerLinks', 'socials', 'copyright', 
             'faqSchema', 'pageSchema'
         ));
     }

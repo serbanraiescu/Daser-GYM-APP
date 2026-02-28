@@ -59,8 +59,8 @@
                     @endif
                 @endforeach
                 
-                <a href="/app/login" class="text-white px-6 py-2.5 rounded-full hover:opacity-90 transition-all shadow-lg" style="background-color: var(--primary)">
-                    Autentificare
+                <a href="{{ $cta['href'] }}" class="text-white px-6 py-2.5 rounded-full hover:opacity-90 transition-all shadow-lg" style="background-color: var(--primary)">
+                    {{ $cta['label'] }}
                 </a>
             </div>
             
