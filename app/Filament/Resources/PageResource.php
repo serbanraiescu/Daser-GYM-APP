@@ -4,11 +4,21 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageResource\Pages;
 use App\Models\Page;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Illuminate\Support\Str;
 
 class PageResource extends Resource
@@ -20,30 +30,30 @@ class PageResource extends Resource
     protected static ?string $modelLabel = 'Pagină Dinamică';
     protected static ?string $pluralModelLabel = 'Pagini Dinamice';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Tabs::make('Pagina')
+        return $schema
+            ->components([
+                Tabs::make('Pagina')
                     ->tabs([
-                        Forms\Components\Tabs\Tab::make('Setări de Bază')
+                        Tab::make('Setări de Bază')
                             ->icon('heroicon-o-document-text')
                             ->schema([
-                                Forms\Components\Grid::make(2)->schema([
-                                    Forms\Components\TextInput::make('title')
+                                Grid::make(2)->schema([
+                                    TextInput::make('title')
                                         ->label('Titlu Pagină')
                                         ->required()
                                         ->live(onBlur: true)
-                                        ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                        ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
                                         
-                                    Forms\Components\TextInput::make('slug')
+                                    TextInput::make('slug')
                                         ->label('URL Slug')
                                         ->required()
                                         ->unique(ignoreRecord: true)
                                         ->helperText('Exemplu: regulament-intern. Va genera adresa firstgym.ro/p/regulament-intern'),
                                 ]),
 
-                                Forms\Components\RichEditor::make('content')
+                                RichEditor::make('content')
                                     ->label('Conținut Pagină')
                                     ->required()
                                     ->columnSpanFull()
@@ -51,32 +61,32 @@ class PageResource extends Resource
                                         'attachFiles', 'blockquote', 'bold', 'bulletList', 'codeBlock', 'h2', 'h3', 'italic', 'link', 'orderedList', 'redo', 'strike', 'undo',
                                     ]),
 
-                                Forms\Components\Grid::make(3)->schema([
-                                    Forms\Components\Toggle::make('is_active')
+                                Grid::make(3)->schema([
+                                    Toggle::make('is_active')
                                         ->label('Pagină Publicată')
                                         ->default(true),
-                                    Forms\Components\Toggle::make('show_in_footer')
+                                    Toggle::make('show_in_footer')
                                         ->label('Afișează link în Footer')
                                         ->default(false),
                                 ])
                             ]),
                             
-                        Forms\Components\Tabs\Tab::make('AIO & SEO Optimizer')
+                        Tab::make('AIO & SEO Optimizer')
                             ->icon('heroicon-o-sparkles')
                             ->schema([
-                                Forms\Components\Section::make('Tag-uri Meta')
+                                Section::make('Tag-uri Meta')
                                     ->description('Aceste informații invizibile ajută motoarele de căutare să înțeleagă despre ce e vorba. Sunt folosite și de asistenții AI.')
                                     ->schema([
-                                        Forms\Components\Textarea::make('meta_description')
+                                        Textarea::make('meta_description')
                                             ->label('Meta Descriere')
                                             ->rows(3)
                                             ->helperText('Scrieți o descriere de ~150 de caractere care să fie citită de roboți și de utilizatorii pe Google.'),
                                     ]),
 
-                                Forms\Components\Section::make('Schema Markup (JSON-LD)')
+                                Section::make('Schema Markup (JSON-LD)')
                                     ->description('Date structurate pentru AI. Recomandăm definirea paginii corecte.')
                                     ->schema([
-                                        Forms\Components\Select::make('schema_type')
+                                        Select::make('schema_type')
                                             ->label('Tipul Paginii (Schema)')
                                             ->options([
                                                 'WebPage' => 'Pagină Standard (WebPage)',
@@ -87,14 +97,14 @@ class PageResource extends Resource
                                             ->default('WebPage')
                                             ->required(),
 
-                                        Forms\Components\Repeater::make('faq_data')
+                                        Repeater::make('faq_data')
                                             ->label('Generator Inteligent de Răspunsuri Q&A')
                                             ->helperText('Folosiți această secțiune pentru a "hrăni" modelele AI cu întrebări frecvente. Se vor genera automat tag-urile JSON-LD FAQPage în fundal.')
                                             ->schema([
-                                                Forms\Components\TextInput::make('question')
+                                                TextInput::make('question')
                                                     ->label('Întrebare (pentru AI)')
                                                     ->required(),
-                                                Forms\Components\Textarea::make('answer')
+                                                Textarea::make('answer')
                                                     ->label('Răspuns Clar')
                                                     ->required()
                                                     ->rows(2),
