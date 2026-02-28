@@ -142,11 +142,9 @@ class PageResource extends Resource
                                             ->helperText('Folosiți această secțiune pentru a "hrăni" modelele AI cu întrebări frecvente. Se vor genera automat tag-urile JSON-LD FAQPage în fundal.')
                                             ->schema([
                                                 TextInput::make('question')
-                                                    ->label('Întrebare (pentru AI)')
-                                                    ->required(),
+                                                    ->label('Întrebare (pentru AI)'),
                                                 Textarea::make('answer')
                                                     ->label('Răspuns Clar')
-                                                    ->required()
                                                     ->rows(2),
                                             ])
                                             ->columns(1)
