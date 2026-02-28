@@ -12,7 +12,7 @@ class MemberForm
             ->components([
                 \Filament\Schemas\Components\Grid::make([
                     'default' => 1,
-                    'md' => 12,
+                    'lg' => 12,
                 ])
                 ->schema([
                     // Left Side (9 columns / 12 = 75%)
@@ -62,7 +62,10 @@ class MemberForm
                                     ->label('Cod de bare')
                                     ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
                             ])
-                            ->columns(2),
+                            ->columns([
+                                'default' => 1,
+                                'xl' => 2,
+                            ]),
 
                         \Filament\Schemas\Components\Section::make('Note / Observații')
                             ->icon('heroicon-o-chat-bubble-bottom-center-text')
@@ -76,7 +79,8 @@ class MemberForm
                             ->collapsed(),
                     ])
                     ->columnSpan([
-                        'md' => 9,
+                        'default' => 1,
+                        'lg' => 9,
                     ]),
                     
                     // Right Side (3 columns / 12 = 25%)
@@ -125,7 +129,8 @@ class MemberForm
                             ])->collapsible()->collapsed(),
                     ])
                     ->columnSpan([
-                        'md' => 3,
+                        'default' => 1,
+                        'lg' => 3,
                     ]),
                 ]),
 

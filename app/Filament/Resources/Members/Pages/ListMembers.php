@@ -14,7 +14,9 @@ class ListMembers extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('Adaugă Membru'),
+                ->label('Adaugă membru')
+                ->slideOver()
+                ->modalWidth('7xl'),
             \Filament\Actions\Action::make('importJan')
                 ->label('Importă Ianuarie')
                 ->icon('heroicon-o-document-arrow-down')
