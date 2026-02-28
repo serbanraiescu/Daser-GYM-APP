@@ -145,49 +145,56 @@ Route::get('/force-migrate', function() {
     }
 });
 
-// Aggressive Force Sync Route
+// Aggressive Force Sync Route (V2)
 Route::get('/fix-build', function() {
-    $out = "<h3>Aggressive Sync & Build Fix</h3><pre>";
+    $out = "<h3>Aggressive Sync & Build Fix (V2)</h3><pre>";
 
     $base = base_path();
     
-    // 1. Force Git Pull
+    // 1. Force Git Restore on the Repo Build folder
     $out .= "<b>[GIT]</b> Forcing sync from origin...\n";
     $gitCmd = "cd {$base} && git fetch origin main 2>&1 && git reset --hard origin/main 2>&1 && git clean -fd 2>&1";
-    $out .= shell_exec($gitCmd) . "\n\n";
+    $out .= shell_exec($gitCmd) . "\n";
+    
+    // Explicitly restore just in case
+    $out .= shell_exec("cd {$base} && git restore public/build 2>&1") . "\n\n";
 
-    // 2. Verify if build exists in repo now
+    // 2. Identify the Web Document Root
+    $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? __DIR__;
+    $out .= "<b>[ENV]</b> Document Root: {$docRoot}\n";
+    $out .= "<b>[ENV]</b> App Base: {$base}\n\n";
+
     $repoBuild = "{$base}/public/build";
-    $out .= "<b>[VERIFY]</b> Checking if $repoBuild exists: " . (file_exists($repoBuild) ? "YES" : "NO") . "\n";
+    $liveBuild = "{$docRoot}/build";
+
+    // 3. Verify Repo Build
+    $out .= "<b>[VERIFY]</b> Repo Build exists ({$repoBuild}): " . (file_exists($repoBuild) ? "YES" : "NO") . "\n";
     if (file_exists($repoBuild)) {
         $out .= "Files: " . implode(", ", scandir($repoBuild)) . "\n\n";
     }
 
-    // 3. Delete broken symlink or folder in public_html
-    $liveBuild = public_path('build');
-    $out .= "<b>[CLEANUP]</b> Cleaning $liveBuild...\n";
-    if (file_exists($liveBuild)) {
-        if (is_link($liveBuild)) {
-            unlink($liveBuild);
-            $out .= " - Deleted Symlink.\n";
-        } else {
-            shell_exec("rm -rf {$liveBuild}");
-            $out .= " - Deleted Physical Directory.\n";
+    // 4. Force copy from repo to live
+    if (file_exists($repoBuild) && $repoBuild !== $liveBuild) {
+        $out .= "<b>[COPY]</b> Syncing to {$liveBuild}...\n";
+        
+        // Remove old physical or symlink
+        if (file_exists($liveBuild)) {
+            if (is_link($liveBuild)) {
+                unlink($liveBuild);
+            } else {
+                shell_exec("rm -rf {$liveBuild}");
+            }
         }
-    } else {
-        $out .= " - Nothing to clean.\n";
-    }
-
-    // 4. Force copy from repo to public_html instead of symlink to avoid infinite issues
-    if (file_exists($repoBuild)) {
-        $out .= "\n<b>[COPY]</b> Copying build to public_html...\n";
-        $cpCmd = "cp -R {$repoBuild} {$liveBuild} 2>&1";
-        $out .= shell_exec($cpCmd);
+        
+        // Copy recursive
+        $out .= shell_exec("cp -R {$repoBuild} {$liveBuild} 2>&1") . "\n";
         
         $out .= "Verify Live Build: " . (file_exists($liveBuild) ? "YES" : "NO") . "\n";
         if (file_exists($liveBuild)) {
             $out .= "Live Files: " . implode(", ", scandir($liveBuild)) . "\n";
         }
+    } else {
+        $out .= "\n<b>[SKIP]</b> Live folder is the same as Repo folder, no copy needed.\n";
     }
 
     $out .= "</pre><h3>Gata! Testeaza Landing Page-ul!</h3>";
