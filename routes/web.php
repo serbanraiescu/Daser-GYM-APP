@@ -140,8 +140,40 @@ Route::get('/force-migrate', function() {
             $output .= "</ul>";
         }
 
-        return $output;
     } catch (\Exception $e) {
         return "<h1>Error</h1><pre>" . $e->getMessage() . "</pre>";
+    }
+});
+
+// Emergency Route for Build Symlink
+Route::get('/fix-build', function() {
+    $target = base_path('public/build'); 
+    $link = public_path('build'); 
+
+    if (!file_exists($target)) {
+        return "<h1 style='color:red;'>Eroare: Nu gasesc folderul sursa (public/build) in repo.</h1>";
+    }
+
+    if (file_exists($link)) {
+        if (is_link($link)) {
+            return "<h1 style='color:green;'>Symlink-ul exista deja. Nu este nevoie de actiuni.</h1>";
+        } else {
+            // Remove physical folder
+            $it = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($link, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach($it as $file) {
+                if ($file->isDir()){ rmdir($file->getRealPath()); } else { unlink($file->getRealPath()); }
+            }
+            rmdir($link);
+        }
+    }
+    
+    // Create Symlink
+    if (@symlink($target, $link)) {
+        return "<h1 style='color:green;'>Succes! Folderul build a fost legat corect prin symlink. </h1><p>Acum poti inchide aceasta pagina.</p>";
+    } else {
+        return "<h1 style='color:red;'>Eroare: Nu s-a putut crea symlink-ul. (Posibil lipsa drepturi scriere).</h1>";
     }
 });
