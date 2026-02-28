@@ -58,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
+                \App\Http\Middleware\CheckLicense::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])

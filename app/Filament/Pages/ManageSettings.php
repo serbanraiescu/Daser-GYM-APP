@@ -104,6 +104,36 @@ class ManageSettings extends Page implements HasSchemas
                                 \Filament\Forms\Components\RichEditor::make('legal_privacy')
                                     ->label('Politica de Confidențialitate'),
                             ]),
+
+                        Tab::make('Licențiere')
+                            ->icon('heroicon-o-key')
+                            ->schema([
+                                TextInput::make('license_key')
+                                    ->label('Cheie Licență')
+                                    ->password()
+                                    ->placeholder('LIC-XXXX-XXXX')
+                                    ->helperText('Cheia primită de la Daser Design.'),
+                                
+                                \Filament\Forms\Components\Placeholder::make('license_status_display')
+                                    ->label('Status Licență')
+                                    ->content(function ($get) {
+                                        $cache = json_decode(Setting::where('key', 'license_status_cache')->first()?->value ?? '{}', true);
+                                        $status = $cache['status'] ?? 'unknown';
+                                        $days = $cache['days_left'] ?? 0;
+                                        
+                                        $color = match($status) {
+                                            'active' => 'text-success-600',
+                                            'denied' => 'text-danger-600',
+                                            default => 'text-gray-600',
+                                        };
+
+                                        return new \Illuminate\Support\HtmlString("<span class='font-bold {$color}'>" . strtoupper($status) . "</span>" . ($days ? " ({$days} zile rămase)" : ""));
+                                    }),
+
+                                \Filament\Forms\Components\Placeholder::make('license_last_check_display')
+                                    ->label('Ultima Verificare')
+                                    ->content(fn () => Setting::where('key', 'license_last_check')->first()?->value ?? 'Niciodată'),
+                            ]),
                     ])
             ])
             ->statePath('data');
@@ -112,10 +142,37 @@ class ManageSettings extends Page implements HasSchemas
     protected function getFormActions(): array
     {
         return [
+            Action::make('verify_license')
+                ->label('Verifică Licența')
+                ->color('info')
+                ->icon('heroicon-o-arrow-path')
+                ->action('verifyLicense'),
             Action::make('save')
                 ->label('Salvează Setările')
                 ->submit('save'),
         ];
+    }
+
+    public function verifyLicense(): void
+    {
+        try {
+            $licenseService = app(\App\Services\LicenseService::class);
+            $cache = $licenseService->checkLicense(true);
+
+            $this->mount(); // Refresh form data
+
+            Notification::make()
+                ->title('Licență sincronizată!')
+                ->body('Status: ' . strtoupper($cache['status'] ?? 'unknown'))
+                ->success()
+                ->send();
+        } catch (\Exception $e) {
+            Notification::make()
+                ->title('Eroare sincronizare')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+        }
     }
 
     public function save(): void
