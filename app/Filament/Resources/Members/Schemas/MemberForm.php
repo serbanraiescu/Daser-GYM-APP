@@ -17,7 +17,7 @@ class MemberForm
                 Section::make('Informații Membru')
                     ->icon('heroicon-o-user')
                     ->schema([
-                        Grid::make(2)
+                        Grid::make(4)
                             ->schema([
                                 \Filament\Forms\Components\TextInput::make('first_name')
                                     ->label('Prenume')
