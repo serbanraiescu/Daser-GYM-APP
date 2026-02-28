@@ -1,0 +1,14 @@
+.fi-main {
+    padding-inline-start: 1rem !important;
+    padding-inline-end: 1rem !important;
+}
+
+.fi-sidebar {
+    width: 240px !important;
+}
+
+@media (min-width: 1024px) {
+    .fi-main-container {
+        gap: 1rem !important;
+    }
+}

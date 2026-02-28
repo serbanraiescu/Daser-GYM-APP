@@ -28,6 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth('full')
             ->brandName(fn () => app(\App\Services\SettingsService::class)->get('website.brand.name', app(\App\Services\SettingsService::class)->get('gym_name', 'Gym Content Manager')))
             ->brandLogo(function () {
                 $logo = app(\App\Services\SettingsService::class)->get('website.brand.logo_url', app(\App\Services\SettingsService::class)->get('gym_logo'));
@@ -50,6 +52,15 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
                 FilamentInfoWidget::class,
             ])
+            ->renderHook(
+                'panels::styles.after',
+                fn (): string => '<style>
+                    .fi-main { padding-inline-start: 1.5rem !important; padding-inline-end: 1.5rem !important; }
+                    .fi-sidebar { width: 17rem !important; }
+                    .fi-main-container { gap: 1rem !important; }
+                    .fi-header { margin-bottom: 1rem !important; }
+                </style>',
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
