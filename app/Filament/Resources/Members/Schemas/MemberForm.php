@@ -10,7 +10,7 @@ class MemberForm
     {
         return $schema
             ->components([
-                \Filament\Schemas\Components\Grid::make(2)
+                \Filament\Schemas\Components\Grid::make(12)
                     ->schema([
                         \Filament\Schemas\Components\Section::make('Informații Membru')
                             ->schema([
@@ -46,7 +46,9 @@ class MemberForm
                                     ])
                                     ->default('ACTIVE')
                                     ->required(),
-                            ])->columns(2),
+                            ])
+                            ->columns(2)
+                            ->columnSpan(6),
                         
                         \Filament\Schemas\Components\Group::make([
                             \Filament\Schemas\Components\Section::make('Abonament Inițial & Plată')
@@ -87,16 +89,17 @@ class MemberForm
                                         ->label(false)
                                         ->image()
                                         ->directory('members'),
-                                ])->collapsible(),
-                        ]),
-                    ]),
+                                ])->collapsible()->collapsed(),
+                        ])->columnSpan(4),
 
-                \Filament\Schemas\Components\Section::make('Note')
-                    ->schema([
-                        \Filament\Forms\Components\Textarea::make('notes')
-                            ->label(false)
-                            ->rows(2),
-                    ])->collapsible()->collapsed(),
+                        \Filament\Schemas\Components\Section::make('Note')
+                            ->schema([
+                                \Filament\Forms\Components\Textarea::make('notes')
+                                    ->label(false)
+                                    ->rows(8),
+                            ])
+                            ->columnSpan(2),
+                    ]),
 
                 \Filament\Schemas\Components\Section::make('Lista Abonamente')
                     ->visible(fn ($livewire) => $livewire instanceof \App\Filament\Resources\Members\Pages\EditMember)
