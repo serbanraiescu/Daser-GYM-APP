@@ -119,11 +119,16 @@ class PublicWebsiteController extends Controller
                 'footer' => [
                     'text_left' => $get('website.footer.text_left', 'Misiunea noastră este să oferim un mediu premium și inspirațional.'),
                     'text_right' => $get('website.footer.text_right', 'Informații'),
-                    'links' => $get('website.footer.links', [
-                        ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
-                        ['label' => 'Politica de Confidențialitate', 'href' => '/politica-confidentialitate', 'visible' => true],
-                        ['label' => 'Termeni și Condiții', 'href' => '/termeni-si-conditii', 'visible' => true],
-                    ]),
+                    'links' => array_merge(
+                        $get('website.footer.links', [
+                            ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
+                            ['label' => 'Politica de Confidențialitate', 'href' => '/politica-confidentialitate', 'visible' => true],
+                            ['label' => 'Termeni și Condiții', 'href' => '/termeni-si-conditii', 'visible' => true],
+                        ]),
+                        \App\Models\Page::where('is_active', true)->where('show_in_footer', true)->get()->map(function($page) {
+                            return ['label' => $page->title, 'href' => '/p/' . $page->slug, 'visible' => true];
+                        })->toArray()
+                    ),
                     'socials' => $get('website.footer.socials', [
                         'facebook' => $get('social_facebook'),
                         'instagram' => $get('social_instagram'),

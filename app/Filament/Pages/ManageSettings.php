@@ -141,7 +141,66 @@ class ManageSettings extends Page implements HasSchemas
                                     ->helperText('Folosiți acest token în Master App pentru Revocare Imediată.')
                                     ->copyable(),
                             ]),
+                            
+                        Tab::make('Landing Page')
+                            ->icon('heroicon-o-globe-alt')
+                            ->schema([
+                                \Filament\Forms\Components\Section::make('Secțiunea Hero (Antet)')
+                                    ->description('Personalizați prima impresie a site-ului. Această secțiune apare imediat cum utilizatorul deschide pagina.')
+                                    ->schema([
+                                        FileUpload::make('website.hero.background_url')
+                                            ->label('Imagine Fundal')
+                                            ->image()
+                                            ->directory('branding'),
+                                        TextInput::make('website.hero.title')
+                                            ->label('Titlu Principal')
+                                            ->placeholder('ex: Transformă-ți Corpul Astăzi.'),
+                                        Textarea::make('website.hero.subtitle')
+                                            ->label('Subtitlu / Scurtă Descriere')
+                                            ->rows(2),
+                                        TextInput::make('website.hero.primary_button.label')
+                                            ->label('Text Buton Primar')
+                                            ->placeholder('ex: Vezi Abonamentele'),
+                                        TextInput::make('website.hero.secondary_button.label')
+                                            ->label('Text Buton Secundar')
+                                            ->placeholder('ex: Contactează-ne'),
+                                    ])->collapsible(),
+                                    
+                                \Filament\Forms\Components\Section::make('Secțiunea Funcționalități (Beneficii)')
+                                    ->schema([
+                                        \Filament\Forms\Components\Toggle::make('website.features.enabled')
+                                            ->label('Afișează această secțiune pe site')
+                                            ->default(true),
+                                        TextInput::make('website.features.title')
+                                            ->label('Titlu Secțiune')
+                                            ->placeholder('ex: De ce să ne alegi pe noi?'),
+                                    ])->collapsible()->collapsed(),
+                                    
+                                \Filament\Forms\Components\Section::make('Footer & Social Media')
+                                    ->schema([
+                                        Textarea::make('website.footer.text_left')
+                                            ->label('Declarație Misiune (Coloana stângă)')
+                                            ->placeholder('Misiunea noastră este să oferim un mediu premium...')
+                                            ->rows(3),
+                                        TextInput::make('website.footer.copyright_text')
+                                            ->label('Text Copyright')
+                                            ->placeholder('Toate drepturile rezervate.'),
+                                            
+                                        \Filament\Forms\Components\Grid::make(2)->schema([
+                                            TextInput::make('social_facebook')
+                                                ->label('Link Profil Facebook')
+                                                ->prefix('https://'),
+                                            TextInput::make('social_instagram')
+                                                ->label('Link Profil Instagram')
+                                                ->prefix('https://'),
+                                            TextInput::make('social_tiktok')
+                                                ->label('Link Profil TikTok')
+                                                ->prefix('https://'),
+                                        ])
+                                    ])->collapsible()->collapsed(),
+                            ]),
                     ])
+
             ])
             ->statePath('data');
     }
