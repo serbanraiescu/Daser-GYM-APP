@@ -139,10 +139,30 @@ Route::get('/force-migrate', function() {
             }
             $output .= "</ul>";
         }
-
+        return $output;
     } catch (\Exception $e) {
         return "<h1>Error</h1><pre>" . $e->getMessage() . "</pre>";
     }
+});
+
+Route::get('/test-build', function() {
+    $target = base_path('public/build');
+    $link = public_path('build');
+    
+    $out = "<h3>Target ($target)</h3>";
+    $out .= "exists: " . (file_exists($target) ? 'Yes' : 'No') . "<br>";
+    if (file_exists($target)) {
+        $files = scandir($target);
+        foreach ($files as $f) {
+            $out .= "$f<br>";
+        }
+    }
+    
+    $out .= "<h3>Link ($link)</h3>";
+    $out .= "exists: " . (file_exists($link) ? 'Yes' : 'No') . "<br>";
+    $out .= "is_link: " . (is_link($link) ? 'Yes' : 'No') . "<br>";
+    
+    return $out;
 });
 
 // Emergency Route for Build Symlink
