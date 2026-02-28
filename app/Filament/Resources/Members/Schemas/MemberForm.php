@@ -13,11 +13,11 @@ class MemberForm
     {
         return $schema
             ->components([
-                // One section under another - No columns/groups to avoid layout breakage
                 Section::make('Informații Membru')
                     ->icon('heroicon-o-user')
                     ->schema([
-                        Grid::make(4)
+                        // Row 1: Prenume, Nume
+                        Grid::make(2)
                             ->schema([
                                 \Filament\Forms\Components\TextInput::make('first_name')
                                     ->label('Prenume')
@@ -28,7 +28,11 @@ class MemberForm
                                     ->label('Nume')
                                     ->required()
                                     ->prefixIcon('heroicon-m-user-circle'),
+                            ]),
 
+                        // Row 2: Telefon, Email
+                        Grid::make(2)
+                            ->schema([
                                 \Filament\Forms\Components\TextInput::make('phone')
                                     ->label('Telefon')
                                     ->tel()
@@ -39,7 +43,11 @@ class MemberForm
                                     ->label('Email')
                                     ->email()
                                     ->prefixIcon('heroicon-m-envelope'),
+                            ]),
 
+                        // Row 3: Categorie, Statut, Cod de bare
+                        Grid::make(3)
+                            ->schema([
                                 \Filament\Forms\Components\Select::make('category')
                                     ->label('Categorie')
                                     ->options([
@@ -62,11 +70,11 @@ class MemberForm
                                     ->default('ACTIVE')
                                     ->prefixIcon('heroicon-m-check-badge')
                                     ->required(),
+
+                                \Filament\Forms\Components\Placeholder::make('barcode')
+                                    ->label('Cod de bare')
+                                    ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
                             ]),
-                        
-                        \Filament\Forms\Components\Placeholder::make('barcode')
-                            ->label('Cod de bare')
-                            ->content(fn ($record) => $record?->user?->barcode ?? 'Se generează automat la salvare.'),
                     ]),
 
                 Section::make('Abonament & Plată')
@@ -74,7 +82,8 @@ class MemberForm
                     ->description('Activează imediat.')
                     ->visible(fn ($record) => ! ($record?->exists ?? false))
                     ->schema([
-                        Grid::make(4)
+                        // Row 1: Activeaza, Plan
+                        Grid::make(2)
                             ->schema([
                                 \Filament\Forms\Components\Toggle::make('activate_plan')
                                     ->label('Activează Abonament')
@@ -88,7 +97,11 @@ class MemberForm
                                     ->visible(fn ($get) => $get('activate_plan'))
                                     ->reactive()
                                     ->afterStateUpdated(fn ($state, $set) => $set('initial_amount', \App\Models\Plan::find($state)?->price ?? 0)),
+                            ]),
 
+                        // Row 2: Pret, Metoda plata
+                        Grid::make(2)
+                            ->schema([
                                 \Filament\Forms\Components\TextInput::make('initial_amount')
                                     ->label('Preț')
                                     ->numeric()
@@ -160,7 +173,7 @@ class MemberForm
                                     ->default('ACTIVE')
                                     ->required(),
                             ])
-                            ->columns(4)
+                            ->columns(2)
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => isset($state['plan_id']) ? \App\Models\Plan::find($state['plan_id'])?->name : null),
                     ]),
