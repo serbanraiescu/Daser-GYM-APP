@@ -20,7 +20,7 @@ require $APP_DIR.'/vendor/autoload.php';
 /** @var Application $app */
 $app = require_once $APP_DIR.'/bootstrap/app.php';
 
-// Force public path to public folder for root access
-$app->usePublicPath(__DIR__.'/public');
+// Force public path to current folder for root access
+$app->usePublicPath(__DIR__);
 
 $app->handleRequest(Request::capture());
