@@ -73,8 +73,7 @@ class MemberForm
                                     ->placeholder('Observații despre membru...')
                                     ->rows(4),
                             ])
-                            ->collapsible()
-                            ->collapsed(),
+                            ->collapsible(),
                     ])
                     ->columnSpan(1),
                     
@@ -83,7 +82,7 @@ class MemberForm
                         \Filament\Schemas\Components\Section::make('Abonament & Plată')
                             ->icon('heroicon-o-credit-card')
                             ->description('Activează imediat.')
-                            ->visible(fn ($record) => $record === null)
+                            ->visible(fn ($record) => ! ($record?->exists ?? false))
                             ->schema([
                                 \Filament\Forms\Components\Toggle::make('activate_plan')
                                     ->label('Activează Abonament')
@@ -127,7 +126,7 @@ class MemberForm
                 ]),
 
                 \Filament\Schemas\Components\Section::make('Lista Abonamente')
-                    ->visible(fn ($record) => $record !== null)
+                    ->visible(fn ($record) => $record?->exists ?? false)
                     ->schema([
                         \Filament\Forms\Components\Repeater::make('memberships')
                             ->relationship()
