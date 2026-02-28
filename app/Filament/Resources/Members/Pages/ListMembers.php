@@ -15,8 +15,11 @@ class ListMembers extends ListRecords
         return [
             CreateAction::make()
                 ->label('Adaugă membru')
-                ->modalWidth('7xl')
-                ->extraModalWindowAttributes(['class' => 'daser-wide-modal'])
+                ->modalWidth('screen')
+                ->extraModalWindowAttributes([
+                    'class' => 'daser-wide-modal',
+                    'style' => 'max-width: 95vw !important; width: 95vw !important;',
+                ])
                 ->after(function (array $data, \App\Models\Member $record) {
                     if ($data['activate_plan'] ?? false) {
                         $plan = \App\Models\Plan::find($data['initial_plan_id']);
