@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\Members\Schemas;
 
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
 
 class MemberForm
 {
