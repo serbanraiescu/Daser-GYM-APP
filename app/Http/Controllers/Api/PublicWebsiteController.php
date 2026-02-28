@@ -15,7 +15,7 @@ class PublicWebsiteController extends Controller
     public function getWebsiteConfig(): JsonResponse
     {
         $config = Cache::remember('public:website', now()->addHours(24), function () {
-            // Fetch all settings starting with 'website.' and 'gym_' as fallback
+            // ... (settings fetching)
             $settings = Setting::where('is_public', true)
                 ->where(function ($query) {
                     $query->where('key', 'like', 'website.%')
@@ -119,16 +119,11 @@ class PublicWebsiteController extends Controller
                 'footer' => [
                     'text_left' => $get('website.footer.text_left', 'Misiunea noastră este să oferim un mediu premium și inspirațional.'),
                     'text_right' => $get('website.footer.text_right', 'Informații'),
-                    'links' => array_merge(
-                        $get('website.footer.links', [
-                            ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
-                            ['label' => 'Politica de Confidențialitate', 'href' => '/politica-confidentialitate', 'visible' => true],
-                            ['label' => 'Termeni și Condiții', 'href' => '/termeni-si-conditii', 'visible' => true],
-                        ]),
-                        \App\Models\Page::where('is_active', true)->where('show_in_footer', true)->get()->map(function($page) {
-                            return ['label' => $page->title, 'href' => '/p/' . $page->slug, 'visible' => true];
-                        })->toArray()
-                    ),
+                    'static_links' => $get('website.footer.links', [
+                        ['label' => 'Acasă', 'href' => '/#acasa', 'visible' => true],
+                        ['label' => 'Politica de Confidențialitate', 'href' => '/politica-confidentialitate', 'visible' => true],
+                        ['label' => 'Termeni și Condiții', 'href' => '/termeni-si-conditii', 'visible' => true],
+                    ]),
                     'socials' => $get('website.footer.socials', [
                         'facebook' => $get('social_facebook'),
                         'instagram' => $get('social_instagram'),
@@ -140,6 +135,20 @@ class PublicWebsiteController extends Controller
                 ],
             ];
         });
+
+        // Merge dynamic pages OUTSIDE the cache to ensure instant updates
+        $config['footer']['links'] = array_merge(
+            $config['footer']['static_links'],
+            \App\Models\Page::where('is_active', true)
+                ->where('show_in_footer', true)
+                ->get()
+                ->map(function($page) {
+                    return ['label' => $page->title, 'href' => '/p/' . $page->slug, 'visible' => true];
+                })
+                ->toArray()
+        );
+
+        unset($config['footer']['static_links']);
 
         return response()->json($config);
     }
