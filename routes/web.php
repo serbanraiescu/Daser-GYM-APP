@@ -37,6 +37,36 @@ Route::get('/force-migrate', function() {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         $output .= "<pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
 
+        // 4. Permissions Fix
+        $output .= "<h2>4. Permissions Fix</h2>";
+        $storageAppPublic = storage_path('app/public');
+        if (file_exists($storageAppPublic)) {
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($storageAppPublic, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST
+            );
+
+            foreach ($iterator as $item) {
+                if ($item->isDir()) {
+                    chmod($item->getPathname(), 0755);
+                } else {
+                    chmod($item->getPathname(), 0644);
+                }
+            }
+            chmod($storageAppPublic, 0755);
+            $output .= "<p style='color:green'>Permissions fixed recursively for storage/app/public (Directories: 755, Files: 644).</p>";
+        }
+
+        // 5. Diagnostic
+        $output .= "<h2>5. Diagnostic</h2>";
+        $output .= "<ul>";
+        $output .= "<li><b>Public Path:</b> " . public_path() . "</li>";
+        $output .= "<li><b>Storage Link Path:</b> " . public_path('storage') . "</li>";
+        $output .= "<li><b>Is Link:</b> " . (is_link(public_path('storage')) ? "YES" : "NO") . "</li>";
+        $output .= "<li><b>Target Exists:</b> " . (file_exists(public_path('storage')) ? "YES" : "NO") . "</li>";
+        $output .= "<li><b>Symlink Function Available:</b> " . (function_exists('symlink') ? "YES" : "NO") . "</li>";
+        $output .= "</ul>";
+
         return $output;
     } catch (\Exception $e) {
         return "<h1>Error</h1><pre>" . $e->getMessage() . "</pre>";
