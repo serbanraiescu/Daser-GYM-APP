@@ -17,7 +17,8 @@ class CheckLicense
         if ($request->is('force-migrate*') || 
             $request->is('livewire/upload*') || 
             $request->is('admin/manage-settings*') ||
-            $request->is('admin/license/reverify*')) {
+            $request->is('admin/license/reverify*') ||
+            $request->is('admin/login*')) {
             return $next($request);
         }
 
