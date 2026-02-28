@@ -15,8 +15,8 @@ class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
-    protected static ?string $navigationGroup = 'Site & Conținut';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-duplicate';
+    protected static string|\UnitEnum|null $navigationGroup = 'Site & Conținut';
     protected static ?string $modelLabel = 'Pagină Dinamică';
     protected static ?string $pluralModelLabel = 'Pagini Dinamice';
 
