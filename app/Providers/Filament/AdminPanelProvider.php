@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->sidebarCollapsibleOnDesktop()
-            ->maxContentWidth('7xl')
+            ->maxContentWidth('full')
             ->brandName(fn () => app(\App\Services\SettingsService::class)->get('website.brand.name', app(\App\Services\SettingsService::class)->get('gym_name', 'Gym Content Manager')))
             ->brandLogo(function () {
                 $logo = app(\App\Services\SettingsService::class)->get('website.brand.logo_url', app(\App\Services\SettingsService::class)->get('gym_logo'));

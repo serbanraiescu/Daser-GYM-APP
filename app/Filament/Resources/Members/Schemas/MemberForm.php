@@ -76,10 +76,10 @@ class MemberForm
                             ->collapsed(),
                     ])
                     ->columnSpan([
-                        'lg' => 2,
+                        'lg' => 9,
                     ]),
                     
-                    // Right Side (1/3 of space)
+                    // Right Side (3 columns / 12 = 25%)
                     \Filament\Schemas\Components\Group::make([
                         \Filament\Schemas\Components\Section::make('Abonament & Plată')
                             ->icon('heroicon-o-credit-card')
@@ -125,7 +125,7 @@ class MemberForm
                             ])->collapsible()->collapsed(),
                     ])
                     ->columnSpan([
-                        'lg' => 1,
+                        'lg' => 3,
                     ]),
                 ]),
 
