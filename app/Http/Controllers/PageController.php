@@ -114,7 +114,7 @@ class PageController extends Controller
         return view('pages.show', compact(
             'page', 'brandName', 'logo', 'primaryColor', 'secondaryColor', 
             'navItems', 'cta', 'footerText', 'footerLinks', 'socials', 'copyright', 
-            'faqSchema', 'pageSchema'
+            'faqSchema', 'pageSchema', 'version'
         ));
     }
 }
