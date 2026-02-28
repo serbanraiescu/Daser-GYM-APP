@@ -82,7 +82,7 @@ class MemberForm
                         \Filament\Schemas\Components\Section::make('Abonament & Plată')
                             ->icon('heroicon-o-credit-card')
                             ->description('Activează imediat.')
-                            ->visible(fn ($livewire) => $livewire instanceof \App\Filament\Resources\Members\Pages\CreateMember)
+                            ->visible(fn ($record) => $record === null)
                             ->schema([
                                 \Filament\Forms\Components\Toggle::make('activate_plan')
                                     ->label('Activează Abonament')
@@ -120,13 +120,13 @@ class MemberForm
                                     ->label(false)
                                     ->image()
                                     ->directory('members'),
-                            ])->collapsible()->collapsed(),
+                            ])->collapsible(),
                     ])
                     ->columnSpan(1),
                 ]),
 
                 \Filament\Schemas\Components\Section::make('Lista Abonamente')
-                    ->visible(fn ($livewire) => $livewire instanceof \App\Filament\Resources\Members\Pages\EditMember)
+                    ->visible(fn ($record) => $record !== null)
                     ->schema([
                         \Filament\Forms\Components\Repeater::make('memberships')
                             ->relationship()
