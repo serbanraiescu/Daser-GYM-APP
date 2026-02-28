@@ -152,6 +152,7 @@
             <div class="border-t border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm gap-4">
                 <div class="text-center md:text-left">
                     <p>&copy; {{ date('Y') }} Daser Enterprise SRL. Licensed Software – All Rights Reserved</p>
+                    <p class="mt-1 opacity-50 text-xs text-slate-600 tracking-wider">v0.0.28</p>
                 </div>
                 <p>Powered by <a href="https://daserdesign.ro" target="_blank" class="font-semibold hover:text-white transition-colors">Daser Technologies</a></p>
             </div>

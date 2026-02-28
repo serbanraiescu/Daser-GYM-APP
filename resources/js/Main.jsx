@@ -65,7 +65,7 @@ export default function Main() {
                 {config.contact?.enabled && <Contact contact={config.contact} />}
             </main>
 
-            <Footer footer={config.footer} brand={config.brand} />
+            <Footer footer={config.footer} brand={config.brand} version={config.app_version} />
         </div>
     );
 }

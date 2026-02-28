@@ -150,6 +150,14 @@ class PublicWebsiteController extends Controller
 
         unset($config['footer']['static_links']);
 
-        return response()->json($config);
+        // Load version from JSON
+        $version = '0.0.0';
+        $versionFile = base_path('version.json');
+        if (file_exists($versionFile)) {
+            $vData = json_decode(file_get_contents($versionFile), true);
+            $version = $vData['version'] ?? $version;
+        }
+
+        return response()->json(array_merge($config, ['app_version' => $version]));
     }
 }
