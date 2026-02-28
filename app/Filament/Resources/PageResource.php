@@ -48,7 +48,7 @@ class PageResource extends Resource
                                         ->label('Titlu Pagină')
                                         ->required()
                                         ->live(onBlur: true)
-                                        ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                        ->afterStateUpdated(fn ($operation, $state, $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
                                         
                                     TextInput::make('slug')
                                         ->label('URL Slug')
