@@ -11,8 +11,7 @@ class MemberForm
         return $schema
             ->components([
                 \Filament\Schemas\Components\Grid::make([
-                    'default' => 1,
-                    'lg' => 12,
+                    'default' => 12,
                 ])
                 ->schema([
                     // Left Side (1/2)
@@ -74,7 +73,10 @@ class MemberForm
                             ])
                             ->collapsible(),
                     ])
-                    ->columnSpan(['lg' => 8]),
+                    ->columnSpan([
+                        'default' => 12,
+                        'lg' => 8,
+                    ]),
                     
                     // Right Side (1/2)
                     \Filament\Schemas\Components\Group::make([
@@ -121,7 +123,10 @@ class MemberForm
                                     ->directory('members'),
                             ])->collapsible(),
                     ])
-                    ->columnSpan(['lg' => 4]),
+                    ->columnSpan([
+                        'default' => 12,
+                        'lg' => 4,
+                    ]),
                 ]),
 
                 \Filament\Schemas\Components\Section::make('Lista Abonamente')
