@@ -18,7 +18,7 @@ class ListMembers extends ListRecords
                 ->modalWidth('screen')
                 ->extraModalWindowAttributes([
                     'class' => 'daser-wide-modal',
-                    'style' => 'max-width: 95vw !important; width: 95vw !important;',
+                    'style' => 'max-width: 80vw !important; width: 80vw !important;',
                 ])
                 ->after(function (array $data, \App\Models\Member $record) {
                     if ($data['activate_plan'] ?? false) {
