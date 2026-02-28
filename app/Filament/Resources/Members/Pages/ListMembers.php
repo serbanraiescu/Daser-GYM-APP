@@ -13,7 +13,8 @@ class ListMembers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Adaugă Membru'),
             \Filament\Actions\Action::make('importJan')
                 ->label('Importă Ianuarie')
                 ->icon('heroicon-o-document-arrow-down')

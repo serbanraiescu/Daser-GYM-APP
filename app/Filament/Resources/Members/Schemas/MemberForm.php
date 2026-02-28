@@ -69,7 +69,7 @@ class MemberForm
                             ->label('Activează Abonament Acum')
                             ->reactive()
                             ->default(false),
-                        \Filament\Forms\Components\Grid::make(3)
+                        \Filament\Schemas\Components\Grid::make(3)
                             ->visible(fn ($get) => $get('activate_plan'))
                             ->schema([
                                 \Filament\Forms\Components\Select::make('initial_plan_id')
