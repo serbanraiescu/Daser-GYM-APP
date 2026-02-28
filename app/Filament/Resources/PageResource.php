@@ -154,7 +154,7 @@ class PageResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
