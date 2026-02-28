@@ -61,6 +61,38 @@ class MemberForm
                             ->label('Note / Observații')
                             ->rows(3),
                     ]),
+                \Filament\Schemas\Components\Section::make('Abonament Inițial & Plată')
+                    ->description('Completează dacă dorești să activezi un abonament și să înregistrezi plata acum.')
+                    ->visible(fn ($livewire) => $livewire instanceof \App\Filament\Resources\Members\Pages\CreateMember)
+                    ->schema([
+                        \Filament\Forms\Components\Toggle::make('activate_plan')
+                            ->label('Activează Abonament Acum')
+                            ->reactive()
+                            ->default(false),
+                        \Filament\Forms\Components\Grid::make(3)
+                            ->visible(fn ($get) => $get('activate_plan'))
+                            ->schema([
+                                \Filament\Forms\Components\Select::make('initial_plan_id')
+                                    ->label('Abonament')
+                                    ->options(\App\Models\Plan::where('active', true)->pluck('name', 'id'))
+                                    ->required(fn ($get) => $get('activate_plan'))
+                                    ->reactive()
+                                    ->afterStateUpdated(fn ($state, $set) => $set('initial_amount', \App\Models\Plan::find($state)?->price ?? 0)),
+                                \Filament\Forms\Components\TextInput::make('initial_amount')
+                                    ->label('Sumă Incasată')
+                                    ->numeric()
+                                    ->required(fn ($get) => $get('activate_plan')),
+                                \Filament\Forms\Components\Select::make('initial_payment_method')
+                                    ->label('Metodă Plată')
+                                    ->options([
+                                        'cash' => 'Numerar',
+                                        'card' => 'Card',
+                                        'online' => 'Online',
+                                    ])
+                                    ->default('cash')
+                                    ->required(fn ($get) => $get('activate_plan')),
+                            ]),
+                    ]),
                 \Filament\Schemas\Components\Section::make('Abonamente (Înscrieri)')
                     ->description('Adaugă sau gestionează abonamentele acestui membru.')
                     ->schema([
