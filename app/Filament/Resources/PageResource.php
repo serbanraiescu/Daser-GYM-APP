@@ -106,7 +106,7 @@ class PageResource extends Resource
                                             ->label('Generator Inteligent de Răspunsuri Q&A')
                                             ->helperText('Folosiți această secțiune pentru a "hrăni" modelele AI cu întrebări frecvente. Se vor genera automat tag-urile JSON-LD FAQPage în fundal.')
                                             ->headerActions([
-                                                \Filament\Forms\Components\Actions\Action::make('extractFromContent')
+                                                \Filament\Actions\Action::make('extractFromContent')
                                                     ->label('Smart Extract (Din Conținut)')
                                                     ->icon('heroicon-m-sparkles')
                                                     ->color('success')
