@@ -145,28 +145,51 @@ Route::get('/force-migrate', function() {
     }
 });
 
-// Fix for the Circular Symlink
+// Aggressive Force Sync Route
 Route::get('/fix-build', function() {
-    $path = base_path('public/build');
-    
-    $out = "<h3>Reparare Build...</h3>";
+    $out = "<h3>Aggressive Sync & Build Fix</h3><pre>";
 
-    // 1. Daca este symlink circular, il stergem.
-    if (is_link($path)) {
-        unlink($path);
-        $out .= "<p style='color:green;'>1. Am sters symlink-ul circular buclucas.</p>";
-    } else {
-        $out .= "<p>1. Nu exista symlink de sters.</p>";
+    $base = base_path();
+    
+    // 1. Force Git Pull
+    $out .= "<b>[GIT]</b> Forcing sync from origin...\n";
+    $gitCmd = "cd {$base} && git fetch origin main 2>&1 && git reset --hard origin/main 2>&1 && git clean -fd 2>&1";
+    $out .= shell_exec($gitCmd) . "\n\n";
+
+    // 2. Verify if build exists in repo now
+    $repoBuild = "{$base}/public/build";
+    $out .= "<b>[VERIFY]</b> Checking if $repoBuild exists: " . (file_exists($repoBuild) ? "YES" : "NO") . "\n";
+    if (file_exists($repoBuild)) {
+        $out .= "Files: " . implode(", ", scandir($repoBuild)) . "\n\n";
     }
 
-    // 2. Restauram fisierele din Git
-    $cmd = 'cd ' . base_path() . ' && git restore public/build 2>&1';
-    $exec = shell_exec($cmd);
-    
-    $out .= "<p style='color:green;'>2. Am extras folderul original de pe Git (public/build) inapoi in aplicatie.</p>";
-    $out .= "<pre>$exec</pre>";
-    $out .= "<p>Da un refresh pe prima pagina!</p>";
+    // 3. Delete broken symlink or folder in public_html
+    $liveBuild = public_path('build');
+    $out .= "<b>[CLEANUP]</b> Cleaning $liveBuild...\n";
+    if (file_exists($liveBuild)) {
+        if (is_link($liveBuild)) {
+            unlink($liveBuild);
+            $out .= " - Deleted Symlink.\n";
+        } else {
+            shell_exec("rm -rf {$liveBuild}");
+            $out .= " - Deleted Physical Directory.\n";
+        }
+    } else {
+        $out .= " - Nothing to clean.\n";
+    }
 
+    // 4. Force copy from repo to public_html instead of symlink to avoid infinite issues
+    if (file_exists($repoBuild)) {
+        $out .= "\n<b>[COPY]</b> Copying build to public_html...\n";
+        $cpCmd = "cp -R {$repoBuild} {$liveBuild} 2>&1";
+        $out .= shell_exec($cpCmd);
+        
+        $out .= "Verify Live Build: " . (file_exists($liveBuild) ? "YES" : "NO") . "\n";
+        if (file_exists($liveBuild)) {
+            $out .= "Live Files: " . implode(", ", scandir($liveBuild)) . "\n";
+        }
+    }
+
+    $out .= "</pre><h3>Gata! Testeaza Landing Page-ul!</h3>";
     return $out;
 });
-
