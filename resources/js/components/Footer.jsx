@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Footer({ brand, footer }) {
+export default function Footer({ brand, footer, version }) {
     return (
         <footer className="bg-slate-950 text-white pt-24 pb-12">
             <div className="max-w-7xl mx-auto px-6">
