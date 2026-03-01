@@ -14,7 +14,7 @@ class PublicWebsiteController extends Controller
      */
     public function getWebsiteConfig(): JsonResponse
     {
-        $config = Cache::remember('public:website_v3', now()->addHours(24), function () {
+        $config = Cache::remember('public:website_v4', now()->addHours(24), function () {
             // Fetch all settings starting with 'website.' and 'gym_' as fallback
             $settings = Setting::where('is_public', true)
                 ->where(function ($query) {
