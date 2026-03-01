@@ -113,6 +113,8 @@ class PublicWebsiteController extends Controller
                     'phone' => $get('website.contact.phone', $get('gym_phone')),
                     'email' => $get('website.contact.email', $get('gym_email')),
                     'address' => $get('website.contact.address', $get('gym_address')),
+                    'lat' => $get('website.contact.lat'),
+                    'lng' => $get('website.contact.lng'),
                     'form_enabled' => $get('website.contact.form_enabled', false),
                     'map_embed_url' => $get('website.contact.map_embed_url'),
                 ],

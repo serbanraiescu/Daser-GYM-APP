@@ -58,11 +58,29 @@ export default function Contact({ contact }) {
                         </form>
                     </div>
                 ) : (
-                    <div className="h-full flex items-center justify-center opacity-20">
-                        {contact.map_embed_url ? (
+                    <div className="h-full flex items-center justify-center">
+                        {contact.lat && contact.lng ? (
+                            <div className="bg-slate-800/50 border border-slate-700 p-8 rounded-[2.5rem] text-center space-y-6 w-full max-w-sm">
+                                <div className="text-6xl">📍</div>
+                                <div className="space-y-1">
+                                    <div className="text-slate-400 text-sm font-bold uppercase tracking-widest">Coordonate GPS</div>
+                                    <div className="text-2xl font-black font-mono text-white tracking-tight">
+                                        {contact.lat}, {contact.lng}
+                                    </div>
+                                </div>
+                                <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${contact.lat},${contact.lng}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-block px-8 py-3 bg-white text-slate-900 rounded-full font-bold hover:bg-[color:var(--primary)] hover:text-white transition-all shadow-xl"
+                                >
+                                    Deschide în Google Maps
+                                </a>
+                            </div>
+                        ) : contact.map_embed_url ? (
                             <iframe src={contact.map_embed_url} width="100%" height="400" style={{ border: 0, borderRadius: '2rem' }} loading="lazy"></iframe>
                         ) : (
-                            <div className="text-9xl">🗺️</div>
+                            <div className="opacity-20 text-9xl">🗺️</div>
                         )}
                     </div>
                 )}

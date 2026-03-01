@@ -94,6 +94,8 @@ class WebsiteSettings extends Page implements HasSchemas
             'website.contact.phone' => $settings->get('website.contact.phone', $settings->get('gym_phone')),
             'website.contact.email' => $settings->get('website.contact.email', $settings->get('gym_email')),
             'website.contact.address' => $settings->get('website.contact.address', $settings->get('gym_address')),
+            'website.contact.lat' => $settings->get('website.contact.lat'),
+            'website.contact.lng' => $settings->get('website.contact.lng'),
             'website.contact.form_enabled' => $schemaatBool('website.contact.form_enabled', false),
             // Footer
             'website.footer.text_left' => $settings->get('website.footer.text_left'),
@@ -257,6 +259,13 @@ class WebsiteSettings extends Page implements HasSchemas
                                 TextInput::make('website.contact.email')->label('Email de afișat'),
                                 TextInput::make('website.contact.address')->label('Adresă de afișat'),
                                 
+                                Section::make('Coordonate GPS (Fără hartă)')
+                                    ->description('Dacă vrei să afișăm doar coordonatele (ex: 44.4268, 26.1025)')
+                                    ->schema([
+                                        TextInput::make('website.contact.lat')->label('Latitudine')->placeholder('Ex: 44.4268'),
+                                        TextInput::make('website.contact.lng')->label('Longitudine')->placeholder('Ex: 26.1025'),
+                                    ])->columns(2),
+                                
                                 Section::make('Footer (Subsol)')
                                     ->schema([
                                         TextInput::make('website.footer.text_left')->label('Text Scurt Stânga'),
@@ -311,6 +320,7 @@ class WebsiteSettings extends Page implements HasSchemas
                 'website.testimonials.enabled', 'website.testimonials.title', 'website.testimonials.items',
                 'website.contact.enabled', 'website.contact.title', 'website.contact.subtitle', 'website.contact.phone',
                 'website.contact.email', 'website.contact.address', 'website.contact.form_enabled',
+                'website.contact.lat', 'website.contact.lng',
                 'website.footer.text_left', 'website.footer.text_right', 'website.footer.links', 'website.footer.copyright_text',
                 'website.footer.socials.facebook', 'website.footer.socials.instagram', 'website.footer.socials.tiktok', 'website.footer.socials.youtube', 'website.footer.socials.whatsapp'
             ];
