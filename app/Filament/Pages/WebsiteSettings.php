@@ -79,6 +79,7 @@ class WebsiteSettings extends Page implements HasSchemas
             'website.features.items' => $schemaatJson('website.features.items'),
             // Plans
             'website.plans.enabled' => $schemaatBool('website.plans.enabled'),
+            'website.plans.use_db' => $schemaatBool('website.plans.use_db', true),
             'website.plans.title' => $settings->get('website.plans.title', 'Planuri'),
             'website.plans.subtitle' => $settings->get('website.plans.subtitle', 'Alege ce ți se potrivește.'),
             'website.plans.show_prices' => $schemaatBool('website.plans.show_prices'),
@@ -228,6 +229,10 @@ class WebsiteSettings extends Page implements HasSchemas
                             ->icon('heroicon-o-currency-dollar')
                             ->schema([
                                 Toggle::make('website.plans.enabled')->label('Afișează secțiunea Abonamente'),
+                                Toggle::make('website.plans.use_db')
+                                    ->label('Folosește Abonamentele din Baza de Date')
+                                    ->helperText('Dacă este activat, planurile create în secțiunea "Planuri" vor apărea automat pe site.')
+                                    ->default(true),
                                 Toggle::make('website.plans.show_prices')->label('Afișează prețurile publice'),
                                 TextInput::make('website.plans.title')->label('Titlu Secțiune'),
                                 TextInput::make('website.plans.subtitle')->label('Subtitlu'),
@@ -316,7 +321,7 @@ class WebsiteSettings extends Page implements HasSchemas
                 'website.hero.primary_button.label', 'website.hero.primary_button.href',
                 'website.hero.secondary_button.label', 'website.hero.secondary_button.href',
                 'website.features.enabled', 'website.features.title', 'website.features.items',
-                'website.plans.enabled', 'website.plans.title', 'website.plans.subtitle', 'website.plans.show_prices', 'website.plans.cta_label',
+                'website.plans.enabled', 'website.plans.use_db', 'website.plans.title', 'website.plans.subtitle', 'website.plans.show_prices', 'website.plans.cta_label',
                 'website.testimonials.enabled', 'website.testimonials.title', 'website.testimonials.items',
                 'website.contact.enabled', 'website.contact.title', 'website.contact.subtitle', 'website.contact.phone',
                 'website.contact.email', 'website.contact.address', 'website.contact.form_enabled',

@@ -44,6 +44,34 @@ class PublicWebsiteController extends Controller
                 return str_starts_with($path, '/storage/') ? $path : '/storage/' . $path;
             };
 
+            // Handle Plans synchronization
+            $plansEnabled = $get('website.plans.enabled', true); // Default to true if not set
+            $useDbPlans = $get('website.plans.use_db', true); // Default to true
+            $planItems = [];
+
+            if ($plansEnabled) {
+                if ($useDbPlans) {
+                    $planItems = \App\Models\Plan::where('active', true)
+                        ->get()
+                        ->map(function ($plan) {
+                            return [
+                                'name' => $plan->name,
+                                'price' => (float) $plan->price,
+                                'duration' => $plan->duration_days . ' zile',
+                                'description' => $plan->description,
+                                'features' => array_map(function($f) {
+                                    return is_array($f) ? ($f['name'] ?? '') : $f;
+                                }, $plan->features ?? []),
+                                'is_featured' => false,
+                            ];
+                        })
+                        ->toArray();
+                } else {
+                    // Fallback to manual items if needed (not currently in schema but for future proofing)
+                    $planItems = $get('website.plans.items', []);
+                }
+            }
+
             return [
                 'brand' => [
                     'name' => $get('website.brand.name', $get('gym_name', 'Gym App')),
