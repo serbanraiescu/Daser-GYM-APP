@@ -14,7 +14,7 @@ class PublicWebsiteController extends Controller
      */
     public function getWebsiteConfig(): JsonResponse
     {
-        $config = Cache::remember('public:website_v2', now()->addHours(24), function () {
+        $config = Cache::remember('public:website_v3', now()->addHours(24), function () {
             // Fetch all settings starting with 'website.' and 'gym_' as fallback
             $settings = Setting::where('is_public', true)
                 ->where(function ($query) {
@@ -123,6 +123,7 @@ class PublicWebsiteController extends Controller
                     'subtitle' => $get('website.plans.subtitle', 'Alege abonamentul care se potrivește nevoilor tale.'),
                     'show_prices' => $get('website.plans.show_prices', true),
                     'cta_label' => $get('website.plans.cta_label', 'Alege Planul'),
+                    'items' => $planItems,
                 ],
                 'testimonials' => [
                     'enabled' => $get('website.testimonials.enabled', false),
