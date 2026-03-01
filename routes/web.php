@@ -150,58 +150,55 @@ Route::get('/force-migrate', function() {
     }
 });
 
-// Aggressive Force Sync Route (V2)
+// Aggressive Force Sync Route (V3)
 Route::get('/fix-build', function() {
-    $out = "<h3>Aggressive Sync & Build Fix (V2)</h3><pre>";
+    $out = "<h3>Aggressive Sync & Build Fix (V3)</h3><pre>";
 
     $base = base_path();
+    $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? __DIR__;
     
-    // 1. Force Git Restore on the Repo Build folder
+    // 1. Force Git Pull & Clean
     $out .= "<b>[GIT]</b> Forcing sync from origin...\n";
     $gitCmd = "cd {$base} && git fetch origin main 2>&1 && git reset --hard origin/main 2>&1 && git clean -fd 2>&1";
-    $out .= shell_exec($gitCmd) . "\n";
-    
-    // Explicitly restore just in case
-    $out .= shell_exec("cd {$base} && git restore public/build 2>&1") . "\n\n";
+    $out .= shell_exec($gitCmd) . "\n\n";
 
-    // 2. Identify the Web Document Root
-    $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? __DIR__;
-    $out .= "<b>[ENV]</b> Document Root: {$docRoot}\n";
-    $out .= "<b>[ENV]</b> App Base: {$base}\n\n";
-
+    // 2. Identify potential build locations
     $repoBuild = "{$base}/public/build";
-    $liveBuild = "{$docRoot}/build";
+    $possibleLiveBuilds = array_unique([
+        "{$docRoot}/build",               // Standard cPanel root
+        base_path('../public_html/build'), // Direct public_html relative to app
+        base_path('public/build'),        // Local public
+    ]);
 
-    // 3. Verify Repo Build
-    $out .= "<b>[VERIFY]</b> Repo Build exists ({$repoBuild}): " . (file_exists($repoBuild) ? "YES" : "NO") . "\n";
+    $out .= "<b>[REPO]</b> Source: {$repoBuild}\n";
+    $out .= "<b>[REPO]</b> Source Exists: " . (file_exists($repoBuild) ? "YES" : "NO") . "\n";
+    
     if (file_exists($repoBuild)) {
-        $out .= "Files: " . implode(", ", scandir($repoBuild)) . "\n\n";
-    }
+        $files = scandir($repoBuild);
+        $out .= "<b>[REPO]</b> Contents: " . implode(", ", $files) . "\n\n";
 
-    // 4. Force copy from repo to live
-    if (file_exists($repoBuild) && $repoBuild !== $liveBuild) {
-        $out .= "<b>[COPY]</b> Syncing to {$liveBuild}...\n";
-        
-        // Remove old physical or symlink
-        if (file_exists($liveBuild)) {
-            if (is_link($liveBuild)) {
-                unlink($liveBuild);
-            } else {
-                shell_exec("rm -rf {$liveBuild}");
+        foreach ($possibleLiveBuilds as $livePath) {
+            if ($repoBuild === $livePath) {
+                $out .= "<b>[SKIP]</b> {$livePath} is the same as source.\n";
+                continue;
             }
+
+            $out .= "<b>[SYNC]</b> Targeted: {$livePath}\n";
+            
+            // Clean up existing
+            if (file_exists($livePath)) {
+                $out .= "   - Removing old version...\n";
+                shell_exec("rm -rf {$livePath} 2>&1");
+            }
+
+            // Copy
+            $out .= "   - Copying new version...\n";
+            $res = shell_exec("cp -R {$repoBuild} {$livePath} 2>&1");
+            $out .= "   - Result: " . ($res ?: "OK") . "\n";
+            $out .= "   - Files in Live: " . (file_exists($livePath) ? implode(", ", scandir($livePath)) : "FAILED") . "\n\n";
         }
-        
-        // Copy recursive
-        $out .= shell_exec("cp -R {$repoBuild} {$liveBuild} 2>&1") . "\n";
-        
-        $out .= "Verify Live Build: " . (file_exists($liveBuild) ? "YES" : "NO") . "\n";
-        if (file_exists($liveBuild)) {
-            $out .= "Live Files: " . implode(", ", scandir($liveBuild)) . "\n";
-        }
-    } else {
-        $out .= "\n<b>[SKIP]</b> Live folder is the same as Repo folder, no copy needed.\n";
     }
 
-    $out .= "</pre><h3>Gata! Testeaza Landing Page-ul!</h3>";
+    $out .= "</pre><h3>Gata! Dă un Refresh (CTRL+F5)!</h3>";
     return $out;
 });
