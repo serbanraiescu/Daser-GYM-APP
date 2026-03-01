@@ -111,6 +111,14 @@ class PageController extends Controller
             "description" => $page->meta_description ?? substr(strip_tags($page->content), 0, 160)
         ];
 
+        // Load version from JSON
+        $version = '0.0.0';
+        $versionFile = base_path('version.json');
+        if (file_exists($versionFile)) {
+            $vData = json_decode(file_get_contents($versionFile), true);
+            $version = $vData['version'] ?? $version;
+        }
+
         return view('pages.show', compact(
             'page', 'brandName', 'logo', 'primaryColor', 'secondaryColor', 
             'navItems', 'cta', 'footerText', 'footerLinks', 'socials', 'copyright', 
